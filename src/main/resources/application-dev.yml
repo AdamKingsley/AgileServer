@@ -1,0 +1,14 @@
+# session默认30min 设置为600s
+server:
+  port: 9090
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    tomcat:
+      max-wait: 1000
+      max-idle: 10
+      min-idle: 5
+      initial-size: 5
