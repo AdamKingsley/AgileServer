@@ -2,7 +2,7 @@ package cn.edu.nju.software.agile_server.service.impl;
 
 import cn.edu.nju.software.agile_server.command.TestCommand;
 import cn.edu.nju.software.agile_server.common.Result;
-import cn.edu.nju.software.agile_server.dao.TestDao;
+import cn.edu.nju.software.agile_server.dao.TestRepository;
 import cn.edu.nju.software.agile_server.dto.TestDto;
 import cn.edu.nju.software.agile_server.entity.TestEntity;
 import cn.edu.nju.software.agile_server.service.TestService;
@@ -14,13 +14,13 @@ import javax.annotation.Resource;
 @Service
 public class TestServiceImpl implements TestService {
     @Resource
-    private TestDao testDao;
+    private TestRepository testDao;
 
     @Override
     public Result insert(TestCommand command) {
         TestEntity entity = new TestEntity();
         BeanUtils.copyProperties(command, entity);
-        testDao.insert(entity);
+        testDao.save(entity);
         return Result.success().code(200).message("插入成功！");
     }
 
