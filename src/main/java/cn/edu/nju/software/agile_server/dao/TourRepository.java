@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TourRepository extends JpaRepository<Tour,Long> {
+
+    Tour findByIdAndState(Long tourId, Integer state);
 }

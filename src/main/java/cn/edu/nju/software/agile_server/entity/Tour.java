@@ -1,10 +1,13 @@
 package cn.edu.nju.software.agile_server.entity;
 
+import cn.edu.nju.software.agile_server.constant.ValidState;
 import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -21,13 +24,13 @@ public class Tour extends BaseEntity {
     private String name;
 
     @Column(name = "f_startTime")
-    private Date startTime;
+    private Instant startTime;
 
     @Column(name = "f_endTime")
-    private Date endTime;
+    private Instant endTime;
 
     @Column(name = "f_nums_of_members")
-    private Integer nums;
+    private Integer nums = 0;
 
     @Column(name = "f_top_limit")
     private Integer limit;
@@ -43,5 +46,8 @@ public class Tour extends BaseEntity {
 
     @Column(name = "f_description", length = 1000)
     private String description;
+
+    @Column(name = "f_state")
+    private Integer state = ValidState.VALID.ordinal();
 
 }
