@@ -224,8 +224,8 @@ public class TourServiceImpl implements TourService {
         List<Tour> totalTour = new ArrayList<>(publicTour);
         totalTour.addAll(clubTour);
 
-        if (Objects.nonNull(form.getState())) {
-            totalTour = totalTour.stream().filter(t -> t.getState().equals(form.getState())).collect(Collectors.toList());
+        if (Objects.nonNull(form.getStage())) {
+            totalTour = totalTour.stream().filter(t -> t.getState().equals(form.getStage())).collect(Collectors.toList());
         }
         if (Objects.nonNull(form.getSightId())) {
             totalTour = totalTour.stream().filter(t -> t.getSightId().equals(form.getSightId())).collect(Collectors.toList());
@@ -253,7 +253,46 @@ public class TourServiceImpl implements TourService {
             //TODO
         }
 
-        return Result.success().code(200).withData(totalTour);
+        /**
+         * 默认按照未开始、进行中、已经结束排序
+         */
+        totalTour = sortByStage(totalTour);
+        List<TourInfoVO> result = new ArrayList<>();
+        List<Long> joinTourIds = userTourDao.findAllByUserIdAndState(form.getUserId(), true)
+                .stream().map(User_Tour::getTourId).collect(Collectors.toList());
+        for (Tour t : totalTour) {
+            TourInfoVO vo = new TourInfoVO();
+            BeanUtils.copyProperties(t, vo);
+            vo.setStage(checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()));
+            if (joinTourIds.contains(t.getId())) {
+                vo.setJoinOrNot(true);
+            } else {
+                vo.setJoinOrNot(false);
+            }
+            result.add(vo);
+        }
+
+        return Result.success().code(200).withData(result);
+    }
+
+    @Override
+    public Result getMyTourList(Long userId) {
+        List<Long> tourIds = userTourDao.findAllByUserIdAndState(userId, true)
+                .stream().map(User_Tour::getTourId).collect(Collectors.toList());
+
+        List<Tour> tourList = tourDao.findAllById(tourIds).stream().filter(t -> t.getState() == ValidState.VALID.ordinal())
+                .collect(Collectors.toList());
+        List<Tour> sorted = sortByStage(tourList);
+
+        List<TourInfoVO> result = new ArrayList<>();
+        for (Tour t : sorted) {
+            TourInfoVO vo = new TourInfoVO();
+            BeanUtils.copyProperties(t, vo);
+            vo.setStage(checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()));
+            vo.setJoinOrNot(true);
+            result.add(vo);
+        }
+        return Result.success().code(200).withData(result);
     }
 
     private int checkTourStage(Long startTime, Long endTime) {
@@ -266,5 +305,23 @@ public class TourServiceImpl implements TourService {
             return TourStage.ENDED.ordinal();
         }
         return 0;
+    }
+
+    private List<Tour> sortByStage(List<Tour> tourList) {
+        List<Tour> notStarted = tourList.stream().filter(t ->
+                checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()) == TourStage.WAINTING.ordinal())
+                .collect(Collectors.toList());
+        List<Tour> running = tourList.stream().filter(t ->
+                checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()) == TourStage.RUNNING.ordinal())
+                .collect(Collectors.toList());
+        List<Tour> ended = tourList.stream().filter(t ->
+                checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()) == TourStage.ENDED.ordinal())
+                .collect(Collectors.toList());
+        List<Tour> result = new ArrayList<>(notStarted);
+
+        result.addAll(running);
+        result.addAll(ended);
+        return result;
+
     }
 }

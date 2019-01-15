@@ -17,7 +17,7 @@ public class TourListForm {
 
   private Instant endTime;
 
-  private Integer state;
+  private Integer stage;
 
   private Long clubId;
 

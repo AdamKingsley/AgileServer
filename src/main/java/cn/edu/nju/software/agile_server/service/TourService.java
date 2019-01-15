@@ -21,5 +21,7 @@ public interface TourService {
 
     Result getTourList(TourListForm form);
 
+    Result getMyTourList(Long userId);
+
 
 }

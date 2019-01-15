@@ -53,4 +53,9 @@ public class TourController {
     public Result getTourList(@RequestBody TourListForm tourListForm) {
         return tourService.getTourList(tourListForm);
     }
+
+    @GetMapping("/my")
+    public Result getMyTourList(@RequestParam("userId") Long userId) {
+        return tourService.getMyTourList(userId);
+    }
 }
