@@ -12,6 +12,7 @@ import cn.edu.nju.software.agile_server.entity.User;
 import cn.edu.nju.software.agile_server.entity.User_Tour;
 import cn.edu.nju.software.agile_server.form.JoinTourForm;
 import cn.edu.nju.software.agile_server.form.TourCreateForm;
+import cn.edu.nju.software.agile_server.form.TourListForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
@@ -187,6 +188,31 @@ public class TourServiceImpl implements TourService {
         tour.setNums(tour.getNums() - 1);
         tourDao.saveAndFlush(tour);
         return Result.success().code(200).message("成功退出出游！");
+    }
+
+    @Override
+    public Result getTourDetail(Long tourId, Long userId) {
+        Tour tour = tourDao.getOne(tourId);
+        if (Objects.isNull(tour)) {
+            return Result.error().code(ResponseCode.INVALID_TOUR).message("要查看的出游不存在!");
+        }
+        TourInfoVO result = new TourInfoVO();
+        BeanUtils.copyProperties(tour, result);
+        result.setStage(checkTourStage(tour.getStartTime().toEpochMilli(), tour.getEndTime().toEpochMilli()));
+
+        List<User_Tour> userTour = userTourDao.findAllByTourIdAndUserIdAndState(tourId, userId, true);
+
+        if (userTour.isEmpty()) {
+            result.setJoinOrNot(false);
+        } else {
+            result.setJoinOrNot(true);
+        }
+        return Result.success().code(200).withData(result);
+    }
+
+    @Override
+    public Result getTourList(TourListForm form) {
+        return null;
     }
 
     private int checkTourStage(Long startTime, Long endTime) {
