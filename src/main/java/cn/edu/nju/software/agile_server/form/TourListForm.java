@@ -19,11 +19,13 @@ public class TourListForm {
 
   private Integer state;
 
-  private Integer clubId;
+  private Long clubId;
 
   private String city;
 
   private Long userId;
+
+  private String name;
 
 
 }

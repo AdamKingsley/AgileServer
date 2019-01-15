@@ -4,19 +4,18 @@ import cn.edu.nju.software.agile_server.common.ResponseCode;
 import cn.edu.nju.software.agile_server.common.Result;
 import cn.edu.nju.software.agile_server.constant.TourStage;
 import cn.edu.nju.software.agile_server.constant.ValidState;
-import cn.edu.nju.software.agile_server.dao.TourRepository;
-import cn.edu.nju.software.agile_server.dao.UserRepository;
-import cn.edu.nju.software.agile_server.dao.UserTourRepository;
-import cn.edu.nju.software.agile_server.entity.Tour;
-import cn.edu.nju.software.agile_server.entity.User;
-import cn.edu.nju.software.agile_server.entity.User_Tour;
+import cn.edu.nju.software.agile_server.dao.*;
+import cn.edu.nju.software.agile_server.entity.*;
 import cn.edu.nju.software.agile_server.form.JoinTourForm;
 import cn.edu.nju.software.agile_server.form.TourCreateForm;
 import cn.edu.nju.software.agile_server.form.TourListForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
+
+import java.util.ArrayList;
 import java.util.stream.Collectors;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -35,6 +34,10 @@ public class TourServiceImpl implements TourService {
     private UserTourRepository userTourDao;
     @Resource
     private UserRepository userDao;
+    @Resource
+    private UserClubRepository userClubDao;
+    @Resource
+    private SightRepository sightDao;
 
     @Override
     public Result createTour(TourCreateForm form) {
@@ -193,7 +196,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Result getTourDetail(Long tourId, Long userId) {
-        Tour tour = tourDao.getOne(tourId);
+        Tour tour = tourDao.findByIdAndState(tourId, ValidState.VALID.ordinal());
         if (Objects.isNull(tour)) {
             return Result.error().code(ResponseCode.INVALID_TOUR).message("要查看的出游不存在!");
         }
@@ -215,10 +218,42 @@ public class TourServiceImpl implements TourService {
     public Result getTourList(TourListForm form) {
         List<Tour> publicTour = tourDao.findByState(ValidState.VALID.ordinal()).stream().filter(t -> t.getClubId() == null).collect(
             Collectors.toList());
-        List<Long> clubTour = userTourDao.findAllByUserIdAndState(form.getUserId(), true).stream().map(User_Tour::getTourId).collect(
-            Collectors.toList());
+        List<Long> clubIds = userClubDao.findAllByUserIdAndState(form.getUserId(), true).stream()
+                .map(User_Club::getClubId).collect(Collectors.toList());
+        List<Tour> clubTour = tourDao.findAllByClubIdExistsAndState(clubIds, ValidState.VALID.ordinal());
+        List<Tour> totalTour = new ArrayList<>(publicTour);
+        totalTour.addAll(clubTour);
 
-        return null;
+        if (Objects.nonNull(form.getState())) {
+            totalTour = totalTour.stream().filter(t -> t.getState().equals(form.getState())).collect(Collectors.toList());
+        }
+        if (Objects.nonNull(form.getSightId())) {
+            totalTour = totalTour.stream().filter(t -> t.getSightId().equals(form.getSightId())).collect(Collectors.toList());
+        }
+        if (Objects.nonNull(form.getClubId())) {
+            totalTour = totalTour.stream().filter(t -> t.getClubId()!= null && t.getClubId().equals(form.getClubId()))
+                    .collect(Collectors.toList());
+        }
+        if (Objects.nonNull(form.getStartTime())) {
+            totalTour = totalTour.stream().filter(t -> t.getStartTime().compareTo(form.getStartTime()) > 0)
+                    .collect(Collectors.toList());
+        }
+        if (Objects.nonNull(form.getEndTime())) {
+            totalTour = totalTour.stream().filter(t -> t.getEndTime().compareTo(form.getEndTime()) < 0)
+                    .collect(Collectors.toList());
+        }
+        if (Objects.nonNull(form.getCity())) {
+            List<Long> sightIds = totalTour.stream().map(Tour::getSightId).collect(Collectors.toList());
+            List<Long> matchSights = sightDao.findAllById(sightIds).stream().filter(s -> s.getCity().equals(form.getCity()))
+                    .map(Sight::getId).collect(Collectors.toList());
+            totalTour = totalTour.stream().filter(t -> matchSights.contains(t.getSightId())).collect(Collectors.toList());
+        }
+
+        if (Objects.nonNull(form.getName())) {
+            //TODO
+        }
+
+        return Result.success().code(200).withData(totalTour);
     }
 
     private int checkTourStage(Long startTime, Long endTime) {

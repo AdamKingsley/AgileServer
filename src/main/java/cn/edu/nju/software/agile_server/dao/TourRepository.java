@@ -11,4 +11,6 @@ public interface TourRepository extends JpaRepository<Tour,Long> {
     Tour findByIdAndState(Long tourId, Integer state);
 
     List<Tour> findByState(Integer state);
+
+    List<Tour> findAllByClubIdExistsAndState(List<Long> clubIds, Integer state);
 }
