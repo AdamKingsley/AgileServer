@@ -3,6 +3,7 @@ package cn.edu.nju.software.agile_server.controller;
 import cn.edu.nju.software.agile_server.common.Result;
 import cn.edu.nju.software.agile_server.form.JoinTourForm;
 import cn.edu.nju.software.agile_server.form.TourCreateForm;
+import cn.edu.nju.software.agile_server.form.TourListForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,16 @@ public class TourController {
 
     @PostMapping("/exit")
     public Result exitTour(@RequestBody JoinTourForm form) {
+        return tourService.exitTour(form);
+    }
 
+    @GetMapping("/detail")
+    public Result getTourDetail(@RequestParam("tourId") Long tourId, @RequestParam("userId") Long userId) {
+        return tourService.getTourDetail(tourId, userId);
+    }
+
+    @PostMapping("/list")
+    public Result getTourList(@RequestBody TourListForm tourListForm) {
+        return tourService.getTourList(tourListForm);
     }
 }
