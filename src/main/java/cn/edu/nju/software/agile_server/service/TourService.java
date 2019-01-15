@@ -1,6 +1,7 @@
 package cn.edu.nju.software.agile_server.service;
 
 import cn.edu.nju.software.agile_server.common.Result;
+import cn.edu.nju.software.agile_server.form.JoinTourForm;
 import cn.edu.nju.software.agile_server.form.TourCreateForm;
 
 public interface TourService {
@@ -10,5 +11,9 @@ public interface TourService {
     Result deleteTour(Long tourId);
 
     Result updateTour(TourCreateForm form);
+
+    Result joinTour(JoinTourForm form);
+
+    Result exitTour(JoinTourForm form);
 
 }

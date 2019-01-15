@@ -10,4 +10,6 @@ import java.util.List;
 public interface UserTourRepository extends JpaRepository<User_Tour, Long> {
 
     List<User_Tour> findAllByTourId(Long tourId);
+
+    List<User_Tour> findAllByTourIdAndUserIdAndState(Long tourId, Long userId, Boolean state);
 }

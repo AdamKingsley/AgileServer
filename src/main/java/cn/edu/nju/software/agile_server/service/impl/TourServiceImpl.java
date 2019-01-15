@@ -5,13 +5,17 @@ import cn.edu.nju.software.agile_server.common.Result;
 import cn.edu.nju.software.agile_server.constant.TourStage;
 import cn.edu.nju.software.agile_server.constant.ValidState;
 import cn.edu.nju.software.agile_server.dao.TourRepository;
+import cn.edu.nju.software.agile_server.dao.UserRepository;
 import cn.edu.nju.software.agile_server.dao.UserTourRepository;
 import cn.edu.nju.software.agile_server.entity.Tour;
+import cn.edu.nju.software.agile_server.entity.User;
 import cn.edu.nju.software.agile_server.entity.User_Tour;
+import cn.edu.nju.software.agile_server.form.JoinTourForm;
 import cn.edu.nju.software.agile_server.form.TourCreateForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
+import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +30,9 @@ public class TourServiceImpl implements TourService {
     @Resource
     private TourRepository tourDao;
     @Resource
-    private UserTourRepository userTourRepository;
+    private UserTourRepository userTourDao;
+    @Resource
+    private UserRepository userDao;
 
     @Override
     public Result createTour(TourCreateForm form) {
@@ -71,10 +77,10 @@ public class TourServiceImpl implements TourService {
             return Result.error().code(ResponseCode.INVALID_TOUR).message("要删除的出游不存在！");
         }
         //先删除user_tour关系表
-        List<User_Tour> userTourList = userTourRepository.findAllByTourId(tourId);
+        List<User_Tour> userTourList = userTourDao.findAllByTourId(tourId);
         userTourList.forEach(u -> u.setState(Boolean.FALSE));
         try {
-            userTourRepository.saveAll(userTourList);
+            userTourDao.saveAll(userTourList);
         } catch (Exception e) {
             return Result.error().code(ResponseCode.DB_DELETE_ERROR).message("删除user_tour表出错！");
         }
@@ -106,7 +112,7 @@ public class TourServiceImpl implements TourService {
         tour.setClubId(form.getClubId());
         tour.setPics(form.getPics());
         tour.setLimit(form.getLimit());
-        
+
         Tour tourEntity = tourDao.saveAndFlush(tour);
         TourInfoVO result = new TourInfoVO();
         BeanUtils.copyProperties(tourEntity, result);
@@ -114,6 +120,73 @@ public class TourServiceImpl implements TourService {
         result.setStage(checkTourStage(form.getStartTime(), form.getEndTime()));
 
         return Result.success().message("更新出游成功！").withData(result);
+    }
+
+    @Override
+    public Result joinTour(JoinTourForm form) {
+        Instant now = Instant.ofEpochMilli(System.currentTimeMillis());
+        Tour tour  = tourDao.findByIdAndState(form.getTourId(), 0);
+        if (Objects.isNull(tour)) {
+            return Result.error().code(ResponseCode.INVALID_TOUR).message("要加入的出游不存在！");
+        }
+        User user = userDao.findUserById(form.getUserId());
+        if (Objects.isNull(user)) {
+            return Result.error().code(ResponseCode.INVALID_USER).message("用户不存在！");
+        }
+
+        if (Objects.nonNull(tour.getLimit()) &&
+                tour.getNums() >= tour.getLimit()) {
+            return Result.error().code(ResponseCode.ENOUGH_NUM_TOUR).message("当前出游已达到人数上限，无法加入！");
+        }
+        if (tour.getEndTime().compareTo(now) < 0) {
+            return Result.error().code(ResponseCode.UPDATE_ENDED_TOUR).message("无法加入已经结束的出游！");
+        }
+
+        User_Tour userTour = new User_Tour();
+        userTour.setState(true);
+        userTour.setTourId(form.getTourId());
+        userTour.setUserId(form.getUserId());
+        DateTime time= new DateTime();
+        userTour.setJoinTime(time);
+        userTourDao.saveAndFlush(userTour);
+
+        //todo redis分布式锁
+        tour.setNums(tour.getNums() + 1);
+        tourDao.saveAndFlush(tour);
+        return Result.success().code(200).message("成功加入出游！");
+    }
+
+    @Override
+    public Result exitTour(JoinTourForm form) {
+        Instant now = Instant.ofEpochMilli(System.currentTimeMillis());
+        Tour tour  = tourDao.findByIdAndState(form.getTourId(), 0);
+        if (Objects.isNull(tour)) {
+            return Result.error().code(ResponseCode.INVALID_TOUR).message("要退出的出游不存在！");
+        }
+        User user = userDao.findUserById(form.getUserId());
+        if (Objects.isNull(user)) {
+            
+            return Result.error().code(ResponseCode.INVALID_USER).message("用户不存在！");
+        }
+
+        if (tour.getEndTime().compareTo(now) < 0) {
+            return Result.error().code(ResponseCode.UPDATE_ENDED_TOUR).message("无法退出已经结束的出游！");
+        }
+        List<User_Tour> userTourList = userTourDao.findAllByTourIdAndUserIdAndState(form.getTourId(),
+                form.getUserId(), true);
+
+        if (userTourList.isEmpty()) {
+            return Result.error().code(ResponseCode.NOT_JOINED_TOUR).message("无法退出未加入的出游！");
+        }
+
+        User_Tour userTour = userTourList.get(0);
+        userTour.setState(false);
+        userTourDao.saveAndFlush(userTour);
+
+        //todo 分布式锁
+        tour.setNums(tour.getNums() - 1);
+        tourDao.saveAndFlush(tour);
+        return Result.success().code(200).message("成功退出出游！");
     }
 
     private int checkTourStage(Long startTime, Long endTime) {
