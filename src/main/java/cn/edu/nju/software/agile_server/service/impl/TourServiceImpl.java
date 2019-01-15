@@ -16,6 +16,7 @@ import cn.edu.nju.software.agile_server.form.TourListForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
+import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -78,7 +79,7 @@ public class TourServiceImpl implements TourService {
             return Result.error().code(ResponseCode.INVALID_TOUR).message("要删除的出游不存在！");
         }
         //先删除user_tour关系表
-        List<User_Tour> userTourList = userTourDao.findAllByTourId(tourId);
+        List<User_Tour> userTourList = userTourDao.findAllByTourIdAndState(tourId, true);
         userTourList.forEach(u -> u.setState(Boolean.FALSE));
         try {
             userTourDao.saveAll(userTourList);
@@ -212,6 +213,11 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Result getTourList(TourListForm form) {
+        List<Tour> publicTour = tourDao.findByState(ValidState.VALID.ordinal()).stream().filter(t -> t.getClubId() == null).collect(
+            Collectors.toList());
+        List<Long> clubTour = userTourDao.findAllByUserIdAndState(form.getUserId(), true).stream().map(User_Tour::getTourId).collect(
+            Collectors.toList());
+
         return null;
     }
 

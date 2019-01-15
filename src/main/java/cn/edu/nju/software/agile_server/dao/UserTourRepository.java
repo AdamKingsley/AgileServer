@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface UserTourRepository extends JpaRepository<User_Tour, Long> {
 
-    List<User_Tour> findAllByTourId(Long tourId);
+    List<User_Tour> findAllByTourIdAndState(Long tourId, Boolean state);
 
     List<User_Tour> findAllByTourIdAndUserIdAndState(Long tourId, Long userId, Boolean state);
+
+    List<User_Tour> findAllByUserIdAndState(Long userId, Boolean state);
 }
