@@ -20,6 +20,8 @@
         <druid.version>1.1.12</druid.version>
         <joda.time.version>2.9.4</joda.time.version>
         <guava.version>24.0-jre</guava.version>
+        <redisson.version>3.9.1</redisson.version>
+        <swagger.version>2.9.2</swagger.version>
     </properties>
 
     <dependencies>
@@ -38,12 +40,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- mybatis集成 待定考虑要不要使用-->
-        <!--<dependency>-->
-        <!--<groupId>org.mybatis.spring.boot</groupId>-->
-        <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
-        <!--<version>${mybatis.starter.version}</version>-->
-        <!--</dependency>-->
         <!--使用自带的jpa 简单点-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -93,9 +89,19 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>3.9.1</version>
+            <version>${redisson.version}</version>
         </dependency>
-
+        <!-- swagger -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
         <!--单元测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
