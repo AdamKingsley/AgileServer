@@ -2,15 +2,17 @@ package cn.edu.nju.software.agile_server.form;
 
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 public class ClubCreateForm {
 
     //创建不传，修改传
     private Long clubId;
 
-    private Long createTime;
+    private Instant createTime;
 
-    private Long modifyTime;
+    private Instant modifyTime;
 
     private String description;
 
