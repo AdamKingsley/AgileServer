@@ -23,4 +23,5 @@ public class ClubListForm {
 
     private String pics;
 
+    private Long userId;
 }
