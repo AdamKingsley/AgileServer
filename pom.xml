@@ -22,6 +22,8 @@
         <guava.version>24.0-jre</guava.version>
         <redisson.version>3.9.1</redisson.version>
         <swagger.version>2.9.2</swagger.version>
+        <!-- spring cloud 只用openfeign-->
+        <openfeign.version>2.1.0.RELEASE</openfeign.version>
     </properties>
 
     <dependencies>
@@ -40,6 +42,20 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- 调用第三方接口 -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${openfeign.version}</version>
+        </dependency>
+
+        <!-- configuration processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!--使用自带的jpa 简单点-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -50,6 +66,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
+
+        <!-- 切面aspect aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!--开发tool主要用于热部署-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -2,6 +2,8 @@ package cn.edu.nju.software.agile_server.controller;
 
 import cn.edu.nju.software.agile_server.command.TestCommand;
 import cn.edu.nju.software.agile_server.common.Result;
+import cn.edu.nju.software.agile_server.config.MessageConfig;
+import cn.edu.nju.software.agile_server.config.WechatConfig;
 import cn.edu.nju.software.agile_server.service.SightService;
 import cn.edu.nju.software.agile_server.service.TestService;
 import io.swagger.annotations.Api;
@@ -21,6 +23,17 @@ public class TestController {
     private TestService testService;
     @Resource
     private SightService sightService;
+
+    @Resource
+    private WechatConfig wechatConfig;
+    @Resource
+    private MessageConfig messageConfig;
+
+    @GetMapping("test")
+    private Result test(){
+        return Result.success().message(wechatConfig.getAppid()+","+wechatConfig.getSecret()+","+messageConfig);
+    }
+
 
     @GetMapping("insert")
     public Result insertSights() {

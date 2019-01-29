@@ -13,3 +13,26 @@ server:
 # logging config
 logging:
   config: classpath:logback.xml
+
+message:
+  app_key: 5cc183cec194dde767d8dc6b16356f3a5cc183cec194dde767d8dc6b16356f3a
+  # 聚合数据提供的短信模版
+  tpl_id: 133518
+
+wechat:
+  appid: wxa78461689e20d7d3
+  secret: a4f15daf686764c2a5f8c66a30848ef7
+  grant_type: authorization_code
+
+lombok:
+  equalsAndHashCode:
+    callSuper: call
+
+feign:
+  client:
+    wechat:
+      value: wechat
+      url: https://api.weixin.qq.com/sns/oauth2/
+    message:
+      value: message
+      url: http://v.juhe.cn/sms/
