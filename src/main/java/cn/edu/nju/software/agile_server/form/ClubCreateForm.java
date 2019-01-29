@@ -10,13 +10,15 @@ public class ClubCreateForm {
     //创建不传，修改传
     private Long clubId;
 
+    private String name;
+
     private Instant createTime;
 
     private Instant modifyTime;
 
     private String description;
 
-    private Long top_limit;
+    private Integer top_limit;
 
     //private Long nums_of_menmbers;
 

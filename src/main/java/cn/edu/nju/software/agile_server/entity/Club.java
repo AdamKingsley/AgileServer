@@ -1,5 +1,6 @@
 package cn.edu.nju.software.agile_server.entity;
 
+import cn.edu.nju.software.agile_server.constant.ValidState;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -42,4 +43,7 @@ public class Club extends BaseEntity {
 
     @Column(name = "f_address")
     private String address;
+
+    @Column(name = "f_state")
+    private Integer state = ValidState.VALID.ordinal();
 }

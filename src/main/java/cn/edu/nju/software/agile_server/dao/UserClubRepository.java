@@ -11,4 +11,6 @@ public interface UserClubRepository extends JpaRepository<User_Club, Long> {
 
     List<User_Club> findAllByUserIdAndState(Long userId, Boolean state);
 
+    List<User_Club> findAllByClubIdAndState(Long clubId, Boolean state);
+
 }
