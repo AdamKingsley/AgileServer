@@ -12,18 +12,16 @@ import cn.edu.nju.software.agile_server.form.TourListForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
-
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -130,7 +128,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public Result joinTour(JoinTourForm form) {
         Instant now = Instant.ofEpochMilli(System.currentTimeMillis());
-        Tour tour  = tourDao.findByIdAndState(form.getTourId(), 0);
+        Tour tour = tourDao.findByIdAndState(form.getTourId(), 0);
         if (Objects.isNull(tour)) {
             return Result.error().code(ResponseCode.INVALID_TOUR).message("要加入的出游不存在！");
         }
@@ -151,7 +149,7 @@ public class TourServiceImpl implements TourService {
         userTour.setState(true);
         userTour.setTourId(form.getTourId());
         userTour.setUserId(form.getUserId());
-        DateTime time= new DateTime();
+        DateTime time = new DateTime();
         userTour.setJoinTime(time);
         userTourDao.saveAndFlush(userTour);
 
@@ -164,7 +162,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public Result exitTour(JoinTourForm form) {
         Instant now = Instant.ofEpochMilli(System.currentTimeMillis());
-        Tour tour  = tourDao.findByIdAndState(form.getTourId(), 0);
+        Tour tour = tourDao.findByIdAndState(form.getTourId(), 0);
         if (Objects.isNull(tour)) {
             return Result.error().code(ResponseCode.INVALID_TOUR).message("要退出的出游不存在！");
         }
@@ -217,7 +215,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public Result getTourList(TourListForm form) {
         List<Tour> publicTour = tourDao.findByState(ValidState.VALID.ordinal()).stream().filter(t -> t.getClubId() == null).collect(
-            Collectors.toList());
+                Collectors.toList());
         List<Long> clubIds = userClubDao.findAllByUserIdAndState(form.getUserId(), true).stream()
                 .map(User_Club::getClubId).collect(Collectors.toList());
         List<Tour> clubTour = tourDao.findAllByClubIdExistsAndState(clubIds, ValidState.VALID.ordinal());
@@ -231,7 +229,7 @@ public class TourServiceImpl implements TourService {
             totalTour = totalTour.stream().filter(t -> t.getSightId().equals(form.getSightId())).collect(Collectors.toList());
         }
         if (Objects.nonNull(form.getClubId())) {
-            totalTour = totalTour.stream().filter(t -> t.getClubId()!= null && t.getClubId().equals(form.getClubId()))
+            totalTour = totalTour.stream().filter(t -> t.getClubId() != null && t.getClubId().equals(form.getClubId()))
                     .collect(Collectors.toList());
         }
         if (Objects.nonNull(form.getStartTime())) {

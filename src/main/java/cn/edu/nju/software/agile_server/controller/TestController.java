@@ -2,6 +2,7 @@ package cn.edu.nju.software.agile_server.controller;
 
 import cn.edu.nju.software.agile_server.command.TestCommand;
 import cn.edu.nju.software.agile_server.common.Result;
+import cn.edu.nju.software.agile_server.service.SightService;
 import cn.edu.nju.software.agile_server.service.TestService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -18,6 +19,14 @@ import javax.annotation.Resource;
 public class TestController {
     @Resource
     private TestService testService;
+    @Resource
+    private SightService sightService;
+
+    @GetMapping("insert")
+    public Result insertSights() {
+
+        return Result.success().message("插入景点数据成功");
+    }
 
     @GetMapping("hello")
     @ApiOperation(value = "测试接口1", notes = "返回Hello World！")
