@@ -14,5 +14,6 @@ public class LoginFeignResponse {
     @JsonProperty("session_key")
     private String sessionKey;
     private String openid;
+    private Long userid;
     //private String scope;
 }

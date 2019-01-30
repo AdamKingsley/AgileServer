@@ -14,6 +14,6 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     List<Club> findByState(Integer state);
 
-    @Query(value = "select * from #{#entityName} as t where t.ownerId in ?1 and t.state=?2",nativeQuery = true)
+    @Query(value = "select * from t_user as t where t.ownerId in ?1 and t.state=?2",nativeQuery = true)
     List<Club> findAllByOwnerIdExistsAndState(List<Long> ownerIds, Integer state);
 }

@@ -23,6 +23,7 @@ public class Result {
     public static Result success() {
         Result result = new Result();
         result.success = true;
+        //默认200，可通过code方法进行修改
         result.setCode("200");
         return result;
     }
@@ -30,6 +31,8 @@ public class Result {
     public static Result error() {
         Result result = new Result();
         result.success = false;
+        //默认500 可以通过code方法进行修改
+        result.setCode("500");
         return result;
     }
 
