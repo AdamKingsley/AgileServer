@@ -20,9 +20,7 @@ public class FormValidate {
     }
 
     public static Boolean validateClubCreateForm(ClubCreateForm form){
-        if (Objects.nonNull(form.getCreateTime()) && Objects.nonNull(form.getModifyTime())
-                && Objects.nonNull(form.getOwner_id())
-                && Objects.nonNull(form.getName())) {
+        if (Objects.nonNull(form.getName())) {
             return true;
         } else {
             return false;

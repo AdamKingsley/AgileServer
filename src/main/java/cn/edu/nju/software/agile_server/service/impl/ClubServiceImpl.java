@@ -18,6 +18,7 @@ import cn.edu.nju.software.agile_server.validate.FormValidate;
 import cn.edu.nju.software.agile_server.vo.ClubInfoVO;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.DateFormat;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
+@Service
 public class ClubServiceImpl implements ClubService {
 
     @Resource
@@ -53,10 +54,10 @@ public class ClubServiceImpl implements ClubService {
         club.setLimit(form.getTop_limit());
         club.setPics(form.getPics());
         try {
-            Club tourEntity = clubDao.save(club);
+            Club clubEntity = clubDao.save(club);
 
             ClubInfoVO result = new ClubInfoVO();
-            BeanUtils.copyProperties(tourEntity, result);
+            BeanUtils.copyProperties(clubEntity, result);
             result.setJoinOrNot(true);
             return Result.success().message("创建社团成功！").withData(result);
         }catch (Exception e) {
@@ -252,38 +253,6 @@ public class ClubServiceImpl implements ClubService {
 
     }
 
-//    public static void main(String[] args){
-//        List<Club> totalClub = new ArrayList<>();
-//        Club club1 =new Club();
-//        Club club2 =new Club();
-//        Club club3 =new Club();
-//        String DateStr1 = "2019-01-30 16:00:00";
-//        String DateStr2 = "2014-08-27 15:50:35";
-//        String DateStr3 = "2014-08-21 10:20:16";
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        try {
-//            Date dateTime1 = dateFormat.parse(DateStr1);
-//            Date dateTime2 = dateFormat.parse(DateStr2);
-//            Date dateTime3 = dateFormat.parse(DateStr3);
-//            club1.setCreatedTime(dateTime1);
-//            club2.setCreatedTime(dateTime2);
-//            club3.setCreatedTime(dateTime3);
-//            totalClub.add(club1);
-//            totalClub.add(club2);
-//            totalClub.add(club3);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        for(Club c:totalClub){
-//            System.out.println(c.getCreatedTime().toString());
-//        }
-//
-//        ClubServiceImpl clubService = new ClubServiceImpl();
-//        totalClub = clubService.sortByCreateTime(totalClub);
-//        for(Club c:totalClub){
-//            System.out.println(c.getCreatedTime().toString());
-//        }
-//
-//    }
+
+
 }
