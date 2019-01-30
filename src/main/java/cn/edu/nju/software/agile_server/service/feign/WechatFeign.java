@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "${feign.client.wechat.value}", url = "${feign.client.wechat.url}")
 public interface WechatFeign {
 
-    @GetMapping("access_token")
-    public String login(@RequestParam("appid") String appid, @RequestParam("secret") String secret,
-                                    @RequestParam("code") String code, @RequestParam("grant_type") String grantType);
+    @GetMapping("jscode2session")
+    public LoginFeignResponse login(@RequestParam("appid") String appid, @RequestParam("secret") String secret,
+                                    @RequestParam("js_code") String code, @RequestParam("grant_type") String grantType);
+
 }

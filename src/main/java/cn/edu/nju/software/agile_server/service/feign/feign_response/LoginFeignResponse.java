@@ -5,12 +5,14 @@ import lombok.Data;
 
 @Data
 public class LoginFeignResponse {
-    @JsonProperty("access_token")
-    private String accessToken;
-    @JsonProperty("refresh_token")
-    private String refreshToken;
-    @JsonProperty("expires_in")
-    private Long expiresIn;
+    //@JsonProperty("access_token")
+    //private String accessToken;
+    //@JsonProperty("refresh_token")
+    //private String refreshToken;
+    //@JsonProperty("expires_in")
+    //private Long expiresIn;
+    @JsonProperty("session_key")
+    private String sessionKey;
     private String openid;
-    private String scope;
+    //private String scope;
 }

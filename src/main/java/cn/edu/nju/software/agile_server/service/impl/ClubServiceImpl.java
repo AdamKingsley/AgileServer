@@ -14,12 +14,13 @@ import cn.edu.nju.software.agile_server.service.ClubService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
 import cn.edu.nju.software.agile_server.vo.ClubInfoVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+@Service
 public class ClubServiceImpl implements ClubService {
 
     @Resource

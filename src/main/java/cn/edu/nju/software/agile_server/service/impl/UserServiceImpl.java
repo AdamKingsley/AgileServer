@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result login(LoginForm loginForm) {
-        String loginFeignResponse = wechatFeign.login(wechatConfig.getAppid(),
+        LoginFeignResponse loginFeignResponse = wechatFeign.login(wechatConfig.getAppid(),
                 wechatConfig.getSecret(), loginForm.getCode(), wechatConfig.getGrantType());
         return Result.success().withData(loginFeignResponse);
     }

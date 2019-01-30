@@ -20,8 +20,8 @@ message:
   tpl_id: 133518
 
 wechat:
-  appid: wxa78461689e20d7d3
-  secret: a4f15daf686764c2a5f8c66a30848ef7
+  appid: wx4b5dffbee7fa1af3
+  secret: c377816e184fb9d963880758b24d4966
   grant_type: authorization_code
 
 lombok:
@@ -32,7 +32,7 @@ feign:
   client:
     wechat:
       value: wechat
-      url: https://api.weixin.qq.com/sns/oauth2/
+      url: https://api.weixin.qq.com/sns/
     message:
       value: message
       url: http://v.juhe.cn/sms/
