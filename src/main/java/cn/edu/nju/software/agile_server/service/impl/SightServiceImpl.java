@@ -8,6 +8,8 @@ import cn.edu.nju.software.agile_server.form.SightForm;
 import cn.edu.nju.software.agile_server.service.SightService;
 import cn.edu.nju.software.agile_server.util.ClassUtil;
 import cn.edu.nju.software.agile_server.vo.SightDetailVO;
+import cn.edu.nju.software.agile_server.vo.SightSimpleVO;
+import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,5 +73,18 @@ public class SightServiceImpl implements SightService {
         Page<Sight> sightResults = sightDao.findAllByCityAndNameLike(cityId, "%" + name + "%", pageRequest);
         //TODO 将sight对象转为sightSimpleVO对象
         return PageResult.success().message("获取分页景点数据成功!").withData("");
+    }
+
+    @Override
+    public Result findAllSightsByCityId(String cityId) {
+        List<Sight> sights = sightDao.findAllByCityId(cityId);
+        List<SightSimpleVO> sightSimpleVOS = sights.stream().map(sight->{
+            SightSimpleVO vo = new SightSimpleVO();
+            BeanUtils.copyProperties(sight,vo,"pics","labels");
+            vo.setPics(Lists.newArrayList(sight.getPics().split(",")));
+            vo.setLabels(Lists.newArrayList(sight.getLabels().split(",")));
+            return vo;
+        }).collect(Collectors.toList());
+        return Result.success().message("获取该地区全部景点成功！").withData(sightSimpleVOS);
     }
 }

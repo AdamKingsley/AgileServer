@@ -15,6 +15,8 @@ public interface SightRepository extends PagingAndSortingRepository<Sight, Long>
     //Pageable的字段可以设置的字段自行进行排序
     Page<Sight> findAllByCity(String cityId, Pageable pageable);
 
+    List<Sight> findAllByCityId(String cityId);
+
     List<Sight> findAllById(List<Long> ids);
 
     Page<Sight> findAllByCityAndNameLike(String cityId, String name, PageRequest pageRequest);

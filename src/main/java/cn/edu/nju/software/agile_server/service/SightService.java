@@ -18,4 +18,6 @@ public interface SightService {
     Result sightDetail(Long sightId);
 
     PageResult findSights(String cityId, List<String> orderColumns, Integer pageNum, Integer pageSize, String name);
+
+    Result findAllSightsByCityId(String cityId);
 }

@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @ApiModel(value = "景点详情", description = "view层数据对象")
 public class SightDetailVO {
@@ -11,8 +13,8 @@ public class SightDetailVO {
     private Long id;
     @ApiModelProperty(name = "name", value = "景点名称", dataType = "String")
     private String name;
-    @ApiModelProperty(name = "pics", value = "景点的展示图片列表URL，分号隔开", dataType = "String")
-    private String pics;
+    @ApiModelProperty(name = "pics", value = "景点的展示图片列表URL集合", dataType = "List<String>")
+    private List<String> pics;
     @ApiModelProperty(name = "description", value = "景点的介绍", dataType = "String")
     private String description;
     @ApiModelProperty(name = "province", value = "景点位置的省份", dataType = "String")
@@ -25,8 +27,8 @@ public class SightDetailVO {
     private String address;
     @ApiModelProperty(name = "price", value = "景点的门票的价格", dataType = "Double")
     private Double price;
-    @ApiModelProperty(name = "labels", value = "景点特有的标签，多标签逗号隔开", dataType = "String")
-    private String labels;
+    @ApiModelProperty(name = "labels", value = "景点特有的标签列表", dataType = "List<String>")
+    private List<String> labels;
     @ApiModelProperty(name = "score", value = "景点的评分")
     private Double score;
 }

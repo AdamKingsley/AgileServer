@@ -48,4 +48,9 @@ public class SightController {
             return sightService.findSights(cityId, orderColumns, pageNum, pageSize, name);
         }
     }
+
+    @GetMapping("/all/{cityId}")
+    public Result findSightsByCityId(@PathVariable("cityId") String cityId) {
+        return sightService.findAllSightsByCityId(cityId);
+    }
 }
