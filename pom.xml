@@ -27,11 +27,6 @@
     </properties>
 
     <dependencies>
-        <!-- aop切面，用于日志记录-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
         <!-- JDBC-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
