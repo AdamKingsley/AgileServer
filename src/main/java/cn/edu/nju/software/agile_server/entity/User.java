@@ -38,19 +38,19 @@ public class User extends BaseEntity {
     private String province;
 
     @Column(name = "f_province_id")
-    private Long provinceId;
+    private String provinceId;
 
     @Column(name = "f_city")
     private String city;
 
     @Column(name = "f_city_id")
-    private Long cityId;
+    private String cityId;
 
     @Column(name = "f_area")
     private String area;
 
     @Column(name = "f_area_id")
-    private Long areaId;
+    private String areaId;
 
     @Column(name = "f_address")
     private String address;

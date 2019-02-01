@@ -9,7 +9,9 @@ import cn.edu.nju.software.agile_server.form.UserForm;
 import cn.edu.nju.software.agile_server.service.UserService;
 import cn.edu.nju.software.agile_server.service.feign.WechatFeign;
 import cn.edu.nju.software.agile_server.service.feign.feign_response.LoginFeignResponse;
+import cn.edu.nju.software.agile_server.vo.UserVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -39,16 +41,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Result getUser(Long userid){
+        User user = userDao.findUserById(userid);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user,userVO);
+        return Result.success().withData(userVO).message("获取用户信息成功!");
+    }
+
+    @Override
     public Result create(UserForm userForm) {
         User user = new User();
         BeanUtils.copyProperties(userForm, user);
-        userDao.save(user);
-        return Result.success().message("创建用户，保存用户信息成功！");
+        User saved = userDao.save(user);
+        return Result.success().message("创建用户，保存用户信息成功！").withData(saved.getId());
     }
 
     @Override
     public Result update(UserForm userForm) {
-        if(StringUtils.isEmpty(userForm.getId())){
+        if (StringUtils.isEmpty(userForm.getId())) {
             Result.error().message("更新的用户指定的对应id为空！");
         }
         User user = new User();

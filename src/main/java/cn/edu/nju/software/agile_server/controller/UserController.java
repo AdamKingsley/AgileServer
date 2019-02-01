@@ -29,4 +29,9 @@ public class UserController {
     public Result update(@RequestBody UserForm userForm){
         return userService.update(userForm);
     }
+
+    @GetMapping("/{userId}")
+    public Result getUserById(@PathVariable Long userId){
+        return userService.getUser(userId);
+    }
 }

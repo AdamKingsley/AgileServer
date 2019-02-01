@@ -15,7 +15,7 @@ logging:
   config: classpath:logback.xml
 
 message:
-  app_key: 5cc183cec194dde767d8dc6b16356f3a5cc183cec194dde767d8dc6b16356f3a
+  app_key: 5cc183cec194dde767d8dc6b16356f3a
   # 聚合数据提供的短信模版
   tpl_id: 133518
 

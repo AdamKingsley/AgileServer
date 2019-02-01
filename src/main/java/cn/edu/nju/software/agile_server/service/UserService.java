@@ -10,4 +10,6 @@ public interface UserService {
     Result create(UserForm userForm);
 
     Result update(UserForm userForm);
+
+    Result getUser(Long userid);
 }

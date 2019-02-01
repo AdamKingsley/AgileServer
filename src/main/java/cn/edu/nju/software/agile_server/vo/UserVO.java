@@ -13,11 +13,11 @@ public class UserVO {
     private String tel;
     private String province;
     private String city;
-    private Long provinceId;
-    private Long cityId;
-    private Long areaId;
+    private String provinceId;
+    private String cityId;
+    private String areaId;
     private String area;
     private String address;
     private String school;
-    private String comment;
+    //private String comment;
 }
