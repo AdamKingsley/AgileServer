@@ -62,7 +62,9 @@ public class SightServiceImpl implements SightService {
         Optional<Sight> sight_optional = sightDao.findById(sightId);
         Sight sight = sight_optional.orElse(null);
         SightDetailVO sightDetailVO = new SightDetailVO();
-        BeanUtils.copyProperties(sight, sightDetailVO);
+        BeanUtils.copyProperties(sight, sightDetailVO,"pics","labels");
+        sightDetailVO.setPics(Lists.newArrayList(sight.getPics().split(",")));
+        sightDetailVO.setLabels(Lists.newArrayList(sight.getLabels().split(",")));
         return Result.success().message("获取景点详情成功！").withData(sightDetailVO);
     }
 
