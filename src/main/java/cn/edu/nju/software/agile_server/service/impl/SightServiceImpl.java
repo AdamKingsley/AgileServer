@@ -10,7 +10,6 @@ import cn.edu.nju.software.agile_server.util.ClassUtil;
 import cn.edu.nju.software.agile_server.util.StringUtil;
 import cn.edu.nju.software.agile_server.vo.SightDetailVO;
 import cn.edu.nju.software.agile_server.vo.SightSimpleVO;
-import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,8 +52,8 @@ public class SightServiceImpl implements SightService {
         Sort sort = new Sort(Sort.Direction.DESC, orderColumns);
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize, sort);
         Page<Sight> sightResults = sightDao.findAllByCity(cityId, pageRequest);
-        //TODO 将sight对象转为sightSimpleVO对象
-        return PageResult.success().message("获取分页景点数据成功!").withData("");
+        //TOD 将sight对象转为sightSimpleVO对象
+        return PageResult.success().message("获取分页景点数据成功!").withData(sightResults);
     }
 
 
@@ -64,8 +63,8 @@ public class SightServiceImpl implements SightService {
         Sight sight = sight_optional.orElse(null);
         SightDetailVO sightDetailVO = new SightDetailVO();
         BeanUtils.copyProperties(sight, sightDetailVO, "pics", "labels");
-        sightDetailVO.setPics(StringUtil.getList(sight.getPics(),","));
-        sightDetailVO.setLabels(StringUtil.getList(sight.getLabels(),","));
+        sightDetailVO.setPics(StringUtil.getList(sight.getPics(), ","));
+        sightDetailVO.setLabels(StringUtil.getList(sight.getLabels(), ","));
         return Result.success().message("获取景点详情成功！").withData(sightDetailVO);
     }
 
@@ -74,8 +73,8 @@ public class SightServiceImpl implements SightService {
         Sort sort = new Sort(Sort.Direction.DESC, orderColumns);
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize, sort);
         Page<Sight> sightResults = sightDao.findAllByCityAndNameLike(cityId, "%" + name + "%", pageRequest);
-        //TODO 将sight对象转为sightSimpleVO对象
-        return PageResult.success().message("获取分页景点数据成功!").withData("");
+        //TOD 将sight对象转为sightSimpleVO对象
+        return PageResult.success().message("获取分页景点数据成功!").withData(sightResults);
     }
 
     @Override
@@ -84,8 +83,8 @@ public class SightServiceImpl implements SightService {
         List<SightSimpleVO> sightSimpleVOS = sights.stream().map(sight -> {
             SightSimpleVO vo = new SightSimpleVO();
             BeanUtils.copyProperties(sight, vo, "pics", "labels");
-            vo.setPics(StringUtil.getList(sight.getPics(),","));
-            vo.setLabels(StringUtil.getList(sight.getLabels(),","));
+            vo.setPics(StringUtil.getList(sight.getPics(), ","));
+            vo.setLabels(StringUtil.getList(sight.getLabels(), ","));
             return vo;
         }).collect(Collectors.toList());
         return Result.success().message("获取该地区全部景点成功！").withData(sightSimpleVOS);
