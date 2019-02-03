@@ -7,6 +7,7 @@ import cn.edu.nju.software.agile_server.entity.Sight;
 import cn.edu.nju.software.agile_server.form.SightForm;
 import cn.edu.nju.software.agile_server.service.SightService;
 import cn.edu.nju.software.agile_server.util.ClassUtil;
+import cn.edu.nju.software.agile_server.util.StringUtil;
 import cn.edu.nju.software.agile_server.vo.SightDetailVO;
 import cn.edu.nju.software.agile_server.vo.SightSimpleVO;
 import com.google.common.collect.Lists;
@@ -62,9 +63,9 @@ public class SightServiceImpl implements SightService {
         Optional<Sight> sight_optional = sightDao.findById(sightId);
         Sight sight = sight_optional.orElse(null);
         SightDetailVO sightDetailVO = new SightDetailVO();
-        BeanUtils.copyProperties(sight, sightDetailVO,"pics","labels");
-        sightDetailVO.setPics(Lists.newArrayList(sight.getPics().split(",")));
-        sightDetailVO.setLabels(Lists.newArrayList(sight.getLabels().split(",")));
+        BeanUtils.copyProperties(sight, sightDetailVO, "pics", "labels");
+        sightDetailVO.setPics(StringUtil.getList(sight.getPics(),","));
+        sightDetailVO.setLabels(StringUtil.getList(sight.getLabels(),","));
         return Result.success().message("获取景点详情成功！").withData(sightDetailVO);
     }
 
@@ -80,11 +81,11 @@ public class SightServiceImpl implements SightService {
     @Override
     public Result findAllSightsByCityId(String cityId) {
         List<Sight> sights = sightDao.findAllByCityId(cityId);
-        List<SightSimpleVO> sightSimpleVOS = sights.stream().map(sight->{
+        List<SightSimpleVO> sightSimpleVOS = sights.stream().map(sight -> {
             SightSimpleVO vo = new SightSimpleVO();
-            BeanUtils.copyProperties(sight,vo,"pics","labels");
-            vo.setPics(Lists.newArrayList(sight.getPics().split(",")));
-            vo.setLabels(Lists.newArrayList(sight.getLabels().split(",")));
+            BeanUtils.copyProperties(sight, vo, "pics", "labels");
+            vo.setPics(StringUtil.getList(sight.getPics(),","));
+            vo.setLabels(StringUtil.getList(sight.getLabels(),","));
             return vo;
         }).collect(Collectors.toList());
         return Result.success().message("获取该地区全部景点成功！").withData(sightSimpleVOS);
