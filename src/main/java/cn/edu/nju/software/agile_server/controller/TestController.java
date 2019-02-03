@@ -30,7 +30,7 @@ public class TestController {
     private MessageConfig messageConfig;
 
     @GetMapping("test")
-    private Result test(){
+    public Result test(){
         return Result.success().message(wechatConfig.getAppid()+","+wechatConfig.getSecret()+","+messageConfig);
     }
 
