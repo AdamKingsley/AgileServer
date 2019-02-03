@@ -60,7 +60,7 @@ public class SightServiceImpl implements SightService {
     @Override
     public Result sightDetail(Long sightId) {
         Optional<Sight> sight_optional = sightDao.findById(sightId);
-        Sight sight = sight_optional.orElse(null);
+        Sight sight = sight_optional.orElse(new Sight());
         SightDetailVO sightDetailVO = new SightDetailVO();
         BeanUtils.copyProperties(sight, sightDetailVO, "pics", "labels");
         sightDetailVO.setPics(StringUtil.getList(sight.getPics(), ","));
