@@ -1,7 +1,6 @@
 package cn.edu.nju.software.agile_server.controller;
 
 import cn.edu.nju.software.agile_server.common.Result;
-import cn.edu.nju.software.agile_server.entity.User;
 import cn.edu.nju.software.agile_server.form.LoginForm;
 import cn.edu.nju.software.agile_server.form.UserForm;
 import cn.edu.nju.software.agile_server.service.UserService;
