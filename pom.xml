@@ -22,6 +22,7 @@
         <guava.version>24.0-jre</guava.version>
         <redisson.version>3.9.1</redisson.version>
         <swagger.version>2.9.2</swagger.version>
+        <jacoco.version>0.8.3</jacoco.version>
         <!-- spring cloud 只用openfeign-->
         <openfeign.version>2.1.0.RELEASE</openfeign.version>
     </properties>
@@ -139,6 +140,20 @@
                     <fork>true</fork>
                     <addResources>true</addResources>
                 </configuration>
+            </plugin>
+            <!-- 据说这个能解决sonarqube覆盖率为0的问题 -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
