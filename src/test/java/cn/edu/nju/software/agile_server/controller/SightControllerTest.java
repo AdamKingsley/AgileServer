@@ -2,6 +2,7 @@ package cn.edu.nju.software.agile_server.controller;
 
 import cn.edu.nju.software.agile_server.form.SightForm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,7 @@ public class SightControllerTest {
     @Test
     public void addSight() throws Exception {
         SightForm sightForm = Mockito.mock(SightForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sight").content(mapper.writeValueAsString(sightForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -43,7 +44,7 @@ public class SightControllerTest {
     @Test
     public void addSightBatch() throws Exception {
         SightForm sightForm = Mockito.mock(SightForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sight/batch")
                 .content(mapper.writeValueAsString(Lists.newArrayList(sightForm)))
                 .accept(MediaType.APPLICATION_JSON)

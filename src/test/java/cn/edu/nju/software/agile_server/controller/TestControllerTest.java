@@ -2,6 +2,7 @@ package cn.edu.nju.software.agile_server.controller;
 
 import cn.edu.nju.software.agile_server.command.TestCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -62,7 +63,7 @@ public class TestControllerTest {
     @Test
     public void insertTest() throws Exception {
         TestCommand command = Mockito.mock(TestCommand.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/insert/test")
                 .content(mapper.writeValueAsString(command)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))

@@ -4,6 +4,7 @@ import cn.edu.nju.software.agile_server.form.JoinTourForm;
 import cn.edu.nju.software.agile_server.form.TourCreateForm;
 import cn.edu.nju.software.agile_server.form.TourListForm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,7 +31,7 @@ public class TourControllerTest {
     @Test
     public void createtourTest() throws Exception {
         TourCreateForm tourCreateForm = Mockito.mock(TourCreateForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/tour/create").content(mapper.writeValueAsString(tourCreateForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -43,7 +44,7 @@ public class TourControllerTest {
     @Test
     public void deletetourTest() throws Exception {
         TourCreateForm tourCreateForm = Mockito.mock(TourCreateForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/tour/delete").content(mapper.writeValueAsString(tourCreateForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -56,7 +57,7 @@ public class TourControllerTest {
     @Test
     public void updatetourTest() throws Exception {
         TourCreateForm tourCreateForm = Mockito.mock(TourCreateForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/tour/update").content(mapper.writeValueAsString(tourCreateForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -69,7 +70,7 @@ public class TourControllerTest {
     @Test
     public void jointourTest() throws Exception {
         JoinTourForm jointourForm = Mockito.mock(JoinTourForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/tour/join").content(mapper.writeValueAsString(jointourForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -81,7 +82,7 @@ public class TourControllerTest {
     @Test
     public void exittourTest() throws Exception {
         JoinTourForm jointourForm = Mockito.mock(JoinTourForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/tour/exit").content(mapper.writeValueAsString(jointourForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -103,7 +104,7 @@ public class TourControllerTest {
     @Test
     public void listtourTest() throws Exception {
         TourListForm tourListForm = Mockito.mock(TourListForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/tour/join").content(mapper.writeValueAsString(tourListForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())

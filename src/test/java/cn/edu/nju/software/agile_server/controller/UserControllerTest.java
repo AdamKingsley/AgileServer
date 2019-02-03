@@ -3,6 +3,7 @@ package cn.edu.nju.software.agile_server.controller;
 import cn.edu.nju.software.agile_server.form.LoginForm;
 import cn.edu.nju.software.agile_server.form.UserForm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -29,7 +30,7 @@ public class UserControllerTest {
     @Test
     public void loginTest() throws Exception {
         LoginForm loginForm = Mockito.mock(LoginForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/user/login").content(mapper.writeValueAsString(loginForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -42,7 +43,7 @@ public class UserControllerTest {
     @Test
     public void createTest() throws Exception {
         UserForm userForm = Mockito.mock(UserForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/user/create").content(mapper.writeValueAsString(userForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -54,7 +55,7 @@ public class UserControllerTest {
     @Test
     public void updateTest() throws Exception {
         UserForm userForm = Mockito.mock(UserForm.class);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/user/update").content(mapper.writeValueAsString(userForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
