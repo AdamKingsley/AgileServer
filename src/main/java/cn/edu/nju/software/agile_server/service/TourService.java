@@ -23,5 +23,7 @@ public interface TourService {
 
     Result getMyTourList(Long userId);
 
+    Result findToursByCityId(String cityId, Long userId);
+
 
 }

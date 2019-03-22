@@ -293,6 +293,31 @@ public class TourServiceImpl implements TourService {
         return Result.success().code(200).withData(result);
     }
 
+    @Override
+    public Result findToursByCityId(String cityId, Long userId) {
+        List<Sight> sights = sightDao.findAllByCityId(cityId);
+        List<Long> sightIds = sights.stream().map(Sight::getId).collect(Collectors.toList());
+        List<Tour> totalTour = tourDao.findAllBySightIdExistsAndState(sightIds, 0);
+
+        totalTour = sortByStage(totalTour);
+        List<TourInfoVO> result = new ArrayList<>();
+        List<Long> joinTourIds = userTourDao.findAllByUserIdAndState(userId, true)
+                .stream().map(User_Tour::getTourId).collect(Collectors.toList());
+        for (Tour t : totalTour) {
+            TourInfoVO vo = new TourInfoVO();
+            BeanUtils.copyProperties(t, vo);
+            vo.setStage(checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()));
+            if (joinTourIds.contains(t.getId())) {
+                vo.setJoinOrNot(true);
+            } else {
+                vo.setJoinOrNot(false);
+            }
+            result.add(vo);
+        }
+
+        return Result.success().code(200).withData(result);
+    }
+
     private int checkTourStage(Long startTime, Long endTime) {
         Long now = System.currentTimeMillis();
         if (startTime > now) {
