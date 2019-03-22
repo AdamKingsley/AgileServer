@@ -19,5 +19,5 @@ public interface SightRepository extends PagingAndSortingRepository<Sight, Long>
 
     List<Sight> findAllById(List<Long> ids);
 
-    Page<Sight> findAllByCityAndNameLike(String cityId, String name, PageRequest pageRequest);
+    Page<Sight> findAllByCityAndNameLike(String cityId, String name, Pageable pageable);
 }
