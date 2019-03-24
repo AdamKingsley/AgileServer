@@ -4,11 +4,14 @@ import cn.edu.nju.software.agile_server.common.PageResult;
 import cn.edu.nju.software.agile_server.common.Result;
 import cn.edu.nju.software.agile_server.form.SightForm;
 import cn.edu.nju.software.agile_server.service.SightService;
+import cn.edu.nju.software.agile_server.util.RequestUtil;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/sight")
@@ -24,6 +27,16 @@ public class SightController {
     @PostMapping("/batch")
     public Result addBatch(@RequestBody List<SightForm> sights) {
         return sightService.addSightBatch(sights);
+    }
+
+    @GetMapping("/all/filter/{cityId}")
+    public Result findFilteredSightsByCityId(@PathVariable("cityId") String cityId, HttpServletRequest request) {
+        Map<String, String> filter_map = RequestUtil.getAttributesStartsWith("f_", request, true);
+        if (filter_map.size() != 0) {
+            return sightService.findSightsWithConditions(cityId, filter_map);
+        } else {
+            return sightService.findAllSightsByCityId(cityId);
+        }
     }
 
     @GetMapping("/{cityId}")
