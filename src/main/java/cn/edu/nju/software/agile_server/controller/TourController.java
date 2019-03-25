@@ -76,6 +76,6 @@ public class TourController {
 
     @GetMapping("/comment/list/{tourId}")
     public Result getTourComment(@PathVariable("tourId") Long tourId) {
-
+        return tourService.getTourComment(tourId);
     }
 }
