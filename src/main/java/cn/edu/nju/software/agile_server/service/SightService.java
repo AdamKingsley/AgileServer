@@ -6,6 +6,7 @@ import cn.edu.nju.software.agile_server.form.SightForm;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface SightService {
 
@@ -20,4 +21,6 @@ public interface SightService {
     PageResult findSights(String cityId, List<String> orderColumns, Integer pageNum, Integer pageSize, String name);
 
     Result findAllSightsByCityId(String cityId);
+
+    Result findSightsWithConditions(String cityId, Map<String, String> filter_map);
 }
