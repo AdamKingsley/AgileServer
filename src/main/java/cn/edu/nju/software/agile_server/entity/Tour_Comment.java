@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "t_tour_score")
-public class Tour_Score implements Persistable<Long> {
+public class Tour_Comment implements Persistable<Long> {
 
     @Id
     @Column(name = "f_id")
@@ -21,8 +21,8 @@ public class Tour_Score implements Persistable<Long> {
     @Column(name = "f_tour_id")
     private Long tourId;
 
-    @Column(name = "score")
-    private double score;
+    @Column(name = "comment")
+    private String comment;
 
     @Override
     public boolean isNew() {

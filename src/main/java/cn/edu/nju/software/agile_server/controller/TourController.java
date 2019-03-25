@@ -63,4 +63,14 @@ public class TourController {
     public Result findToursByCityId(@PathVariable("cityId") String cityId, @RequestParam("userId") Long userId) {
         return tourService.findToursByCityId(cityId, userId);
     }
+
+    @PostMapping("/add/score/{tourId}")
+    public Result addScore(@PathVariable("tourId") Long tourId, @RequestParam("userId") Long userId, @RequestParam("score") double score) {
+        return tourService.addScore(tourId, userId, score);
+    }
+
+    @PostMapping("/add/comment/{tourId}")
+    public Result addComment(@PathVariable("tourId") Long tourId, @RequestParam("userId") Long userId, @RequestParam("comment") String comment) {
+        return tourService.addComment(tourId, userId, comment);
+    }
 }

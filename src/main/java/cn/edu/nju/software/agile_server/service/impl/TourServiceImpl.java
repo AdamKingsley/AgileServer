@@ -36,6 +36,10 @@ public class TourServiceImpl implements TourService {
     private UserClubRepository userClubDao;
     @Resource
     private SightRepository sightDao;
+    @Resource
+    private TourScoreRepository tourScoreDao;
+    @Resource
+    private TourCommentRepository tourCommentDao;
 
     @Override
     public Result createTour(TourCreateForm form) {
@@ -316,6 +320,47 @@ public class TourServiceImpl implements TourService {
         }
 
         return Result.success().code(200).withData(result);
+    }
+
+    @Override
+    public Result addScore(Long tourId, Long useId, Double score) {
+        List<Tour_Score> scoreEntity = tourScoreDao.findAllByTourIdAndUserId(tourId, useId);
+        if (scoreEntity.isEmpty()) {
+            Tour_Score tourScore = new Tour_Score();
+            tourScore.setScore(score);
+            tourScore.setTourId(tourId);
+            tourScore.setUserId(useId);
+            tourScoreDao.save(tourScore);
+        } else {
+            Tour_Score tourScore = scoreEntity.get(0);
+            tourScore.setScore(score);
+            tourScoreDao.save(tourScore);
+        }
+        List<Tour_Score> scoreList = tourScoreDao.findAllByTourId(tourId);
+        Double average = scoreList.stream().mapToDouble(Tour_Score::getScore).average().orElse(0.0);
+
+
+        Tour tour  = tourDao.findByIdAndState(tourId, ValidState.VALID.ordinal());
+        tour.setScore(average);
+        tourDao.saveAndFlush(tour);
+        return Result.success().message("打分成功！");
+    }
+
+    @Override
+    public Result addComment(Long tourId, Long userId, String comment) {
+        List<Tour_Comment> commentEntity = tourCommentDao.findAllByTourIdAndUserId(tourId, userId);
+        if (commentEntity.isEmpty()) {
+            Tour_Comment tourScore = new Tour_Comment();
+            tourScore.setComment(comment);
+            tourScore.setTourId(tourId);
+            tourScore.setUserId(userId);
+            tourCommentDao.saveAndFlush(tourScore);
+        } else {
+            Tour_Comment tourComment = commentEntity.get(0);
+            tourComment.setComment(comment);
+            tourCommentDao.saveAndFlush(tourComment);
+        }
+        return Result.success().message("评论成功！");
     }
 
     private int checkTourStage(Long startTime, Long endTime) {
