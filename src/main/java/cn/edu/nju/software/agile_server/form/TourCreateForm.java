@@ -2,8 +2,6 @@ package cn.edu.nju.software.agile_server.form;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class TourCreateForm {
     /**
