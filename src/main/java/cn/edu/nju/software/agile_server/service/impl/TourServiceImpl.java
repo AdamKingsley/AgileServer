@@ -11,6 +11,7 @@ import cn.edu.nju.software.agile_server.form.TourCreateForm;
 import cn.edu.nju.software.agile_server.form.TourListForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
+import cn.edu.nju.software.agile_server.vo.TourCommentVO;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -361,6 +362,25 @@ public class TourServiceImpl implements TourService {
             tourCommentDao.saveAndFlush(tourComment);
         }
         return Result.success().message("评论成功！");
+    }
+
+    @Override
+    public Result getTourComment(Long tourId) {
+        List<Tour_Comment> tourCommentList = tourCommentDao.findAllByTourId(tourId);
+        List<TourCommentVO> result = new ArrayList<>();
+
+        for (Tour_Comment comment : tourCommentList) {
+            TourCommentVO vo = new TourCommentVO();
+            vo.setComment(comment.getComment());
+            vo.setTourId(comment.getTourId());
+            vo.setUserId(comment.getUserId());
+
+            User user = userDao.findUserById(comment.getUserId());
+            vo.setUserAvatar(user.getAvatar());
+            vo.setUserName(user.getNickname());
+            result.add(vo);
+        }
+        return Result.success().withData(result);
     }
 
     private int checkTourStage(Long startTime, Long endTime) {

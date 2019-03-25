@@ -8,4 +8,6 @@ import java.util.List;
 public interface TourCommentRepository extends JpaRepository<Tour_Comment, Long> {
 
     List<Tour_Comment> findAllByTourIdAndUserId(Long tourId, Long userId);
+
+    List<Tour_Comment> findAllByTourId(Long tourId);
 }

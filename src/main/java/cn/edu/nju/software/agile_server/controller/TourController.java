@@ -73,4 +73,9 @@ public class TourController {
     public Result addComment(@PathVariable("tourId") Long tourId, @RequestParam("userId") Long userId, @RequestParam("comment") String comment) {
         return tourService.addComment(tourId, userId, comment);
     }
+
+    @GetMapping("/comment/list/{tourId}")
+    public Result getTourComment(@PathVariable("tourId") Long tourId) {
+
+    }
 }

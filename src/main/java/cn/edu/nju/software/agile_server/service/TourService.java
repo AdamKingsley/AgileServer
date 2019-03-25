@@ -28,4 +28,6 @@ public interface TourService {
     Result addScore(Long tourId, Long useId, Double score);
 
     Result addComment(Long tourId, Long userId, String comment);
+
+    Result getTourComment(Long tourId);
 }
