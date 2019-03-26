@@ -2,6 +2,8 @@ package cn.edu.nju.software.agile_server.form;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 public class TourCreateForm {
     /**
@@ -16,9 +18,9 @@ public class TourCreateForm {
 
     private String name;
 
-    private Long startTime;
+    private Timestamp startTime;
 
-    private Long endTime;
+    private Timestamp endTime;
 
     private Integer limit;
 

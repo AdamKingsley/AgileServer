@@ -44,8 +44,8 @@ public class TourController {
         return tourService.exitTour(form);
     }
 
-    @GetMapping("/detail/{tourId}")
-    public Result getTourDetail(@PathVariable("tourId") Long tourId, @RequestParam("userId") Long userId) {
+    @GetMapping("/detail/{tourId}/{userId}")
+    public Result getTourDetail(@PathVariable("tourId") Long tourId, @PathVariable("userId") Long userId) {
         return tourService.getTourDetail(tourId, userId);
     }
 
@@ -59,8 +59,8 @@ public class TourController {
         return tourService.getMyTourList(userId);
     }
 
-    @GetMapping("/all/{cityId}")
-    public Result findToursByCityId(@PathVariable("cityId") String cityId, @RequestParam("userId") Long userId) {
+    @GetMapping("/all/{cityId}/{userId}")
+    public Result findToursByCityId(@PathVariable("cityId") String cityId, @PathVariable("userId") Long userId) {
         return tourService.findToursByCityId(cityId, userId);
     }
 

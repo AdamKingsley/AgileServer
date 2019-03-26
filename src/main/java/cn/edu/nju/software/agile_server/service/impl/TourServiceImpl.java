@@ -44,21 +44,23 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Result createTour(TourCreateForm form) {
+        long startTime = form.getStartTime().getTime();
+        long endTime = form.getEndTime().getTime();
         long now = System.currentTimeMillis();
         if (!FormValidate.validateTourCreateForm(form)) {
             return Result.error().code(ResponseCode.EMPTY_FORM).message("表单信息不完整，请补全！");
         }
-        if (form.getStartTime() > form.getEndTime()
-                || form.getStartTime() > now
-                || form.getEndTime() < now) {
+        if (startTime > endTime
+                || startTime > now
+                || endTime < now) {
 
             return Result.error().code(ResponseCode.WRONG_TIME).message("请填写正确的起始时间！");
         }
         Tour tour = new Tour();
         tour.setName(form.getName());
         tour.setOwnerId(form.getOwnerId());
-        tour.setStartTime(Instant.ofEpochMilli(form.getStartTime()));
-        tour.setEndTime(Instant.ofEpochMilli(form.getEndTime()));
+        tour.setStartTime(Instant.ofEpochMilli(form.getStartTime().getTime()));
+        tour.setEndTime(Instant.ofEpochMilli(form.getEndTime().getTime()));
         tour.setSightId(form.getSightId());
         tour.setDescription(form.getDescription());
         tour.setClubId(form.getClubId());
@@ -70,7 +72,7 @@ public class TourServiceImpl implements TourService {
             TourInfoVO result = new TourInfoVO();
             BeanUtils.copyProperties(tourEntity, result);
             result.setJoinOrNot(true);
-            result.setStage(checkTourStage(form.getStartTime(), form.getEndTime()));
+            result.setStage(checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime()));
 
             return Result.success().message("创建出游成功！").withData(result);
         } catch (Exception e) {
@@ -108,13 +110,13 @@ public class TourServiceImpl implements TourService {
         if (Objects.isNull(tour)) {
             return Result.error().code(ResponseCode.INVALID_TOUR).message("要修改的出游不存在！");
         }
-        if (checkTourStage(form.getStartTime(), form.getEndTime()) == TourStage.ENDED.ordinal()) {
+        if (checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime()) == TourStage.ENDED.ordinal()) {
             return Result.error().code(ResponseCode.UPDATE_ENDED_TOUR).message("已经结束的出游无法修改！");
         }
         tour.setName(form.getName());
         tour.setOwnerId(form.getOwnerId());
-        tour.setStartTime(Instant.ofEpochMilli(form.getStartTime()));
-        tour.setEndTime(Instant.ofEpochMilli(form.getEndTime()));
+        tour.setStartTime(Instant.ofEpochMilli(form.getStartTime().getTime()));
+        tour.setEndTime(Instant.ofEpochMilli(form.getEndTime().getTime()));
         tour.setSightId(form.getSightId());
         tour.setDescription(form.getDescription());
         tour.setClubId(form.getClubId());
@@ -125,7 +127,7 @@ public class TourServiceImpl implements TourService {
         TourInfoVO result = new TourInfoVO();
         BeanUtils.copyProperties(tourEntity, result);
         result.setJoinOrNot(true);
-        result.setStage(checkTourStage(form.getStartTime(), form.getEndTime()));
+        result.setStage(checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime()));
 
         return Result.success().message("更新出游成功！").withData(result);
     }
