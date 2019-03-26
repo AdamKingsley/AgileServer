@@ -11,6 +11,7 @@ import cn.edu.nju.software.agile_server.form.TourCreateForm;
 import cn.edu.nju.software.agile_server.form.TourListForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
+import cn.edu.nju.software.agile_server.vo.TourCommentVO;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -36,24 +37,30 @@ public class TourServiceImpl implements TourService {
     private UserClubRepository userClubDao;
     @Resource
     private SightRepository sightDao;
+    @Resource
+    private TourScoreRepository tourScoreDao;
+    @Resource
+    private TourCommentRepository tourCommentDao;
 
     @Override
     public Result createTour(TourCreateForm form) {
+        long startTime = form.getStartTime().getTime();
+        long endTime = form.getEndTime().getTime();
         long now = System.currentTimeMillis();
         if (!FormValidate.validateTourCreateForm(form)) {
             return Result.error().code(ResponseCode.EMPTY_FORM).message("表单信息不完整，请补全！");
         }
-        if (form.getStartTime() > form.getEndTime()
-                || form.getStartTime() > now
-                || form.getEndTime() < now) {
+        if (startTime > endTime
+                || startTime > now
+                || endTime < now) {
 
             return Result.error().code(ResponseCode.WRONG_TIME).message("请填写正确的起始时间！");
         }
         Tour tour = new Tour();
         tour.setName(form.getName());
         tour.setOwnerId(form.getOwnerId());
-        tour.setStartTime(Instant.ofEpochMilli(form.getStartTime()));
-        tour.setEndTime(Instant.ofEpochMilli(form.getEndTime()));
+        tour.setStartTime(Instant.ofEpochMilli(form.getStartTime().getTime()));
+        tour.setEndTime(Instant.ofEpochMilli(form.getEndTime().getTime()));
         tour.setSightId(form.getSightId());
         tour.setDescription(form.getDescription());
         tour.setClubId(form.getClubId());
@@ -65,7 +72,7 @@ public class TourServiceImpl implements TourService {
             TourInfoVO result = new TourInfoVO();
             BeanUtils.copyProperties(tourEntity, result);
             result.setJoinOrNot(true);
-            result.setStage(checkTourStage(form.getStartTime(), form.getEndTime()));
+            result.setStage(checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime()));
 
             return Result.success().message("创建出游成功！").withData(result);
         } catch (Exception e) {
@@ -103,13 +110,13 @@ public class TourServiceImpl implements TourService {
         if (Objects.isNull(tour)) {
             return Result.error().code(ResponseCode.INVALID_TOUR).message("要修改的出游不存在！");
         }
-        if (checkTourStage(form.getStartTime(), form.getEndTime()) == TourStage.ENDED.ordinal()) {
+        if (checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime()) == TourStage.ENDED.ordinal()) {
             return Result.error().code(ResponseCode.UPDATE_ENDED_TOUR).message("已经结束的出游无法修改！");
         }
         tour.setName(form.getName());
         tour.setOwnerId(form.getOwnerId());
-        tour.setStartTime(Instant.ofEpochMilli(form.getStartTime()));
-        tour.setEndTime(Instant.ofEpochMilli(form.getEndTime()));
+        tour.setStartTime(Instant.ofEpochMilli(form.getStartTime().getTime()));
+        tour.setEndTime(Instant.ofEpochMilli(form.getEndTime().getTime()));
         tour.setSightId(form.getSightId());
         tour.setDescription(form.getDescription());
         tour.setClubId(form.getClubId());
@@ -120,7 +127,7 @@ public class TourServiceImpl implements TourService {
         TourInfoVO result = new TourInfoVO();
         BeanUtils.copyProperties(tourEntity, result);
         result.setJoinOrNot(true);
-        result.setStage(checkTourStage(form.getStartTime(), form.getEndTime()));
+        result.setStage(checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime()));
 
         return Result.success().message("更新出游成功！").withData(result);
     }
@@ -291,6 +298,91 @@ public class TourServiceImpl implements TourService {
             result.add(vo);
         }
         return Result.success().code(200).withData(result);
+    }
+
+    @Override
+    public Result findToursByCityId(String cityId, Long userId) {
+        List<Sight> sights = sightDao.findAllByCityId(cityId);
+        List<Long> sightIds = sights.stream().map(Sight::getId).collect(Collectors.toList());
+        List<Tour> totalTour = tourDao.findAllBySightIdExistsAndState(sightIds, 0);
+
+        totalTour = sortByStage(totalTour);
+        List<TourInfoVO> result = new ArrayList<>();
+        List<Long> joinTourIds = userTourDao.findAllByUserIdAndState(userId, true)
+                .stream().map(User_Tour::getTourId).collect(Collectors.toList());
+        for (Tour t : totalTour) {
+            TourInfoVO vo = new TourInfoVO();
+            BeanUtils.copyProperties(t, vo);
+            vo.setStage(checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()));
+            if (joinTourIds.contains(t.getId())) {
+                vo.setJoinOrNot(true);
+            } else {
+                vo.setJoinOrNot(false);
+            }
+            result.add(vo);
+        }
+
+        return Result.success().code(200).withData(result);
+    }
+
+    @Override
+    public Result addScore(Long tourId, Long useId, Double score) {
+        List<Tour_Score> scoreEntity = tourScoreDao.findAllByTourIdAndUserId(tourId, useId);
+        if (scoreEntity.isEmpty()) {
+            Tour_Score tourScore = new Tour_Score();
+            tourScore.setScore(score);
+            tourScore.setTourId(tourId);
+            tourScore.setUserId(useId);
+            tourScoreDao.save(tourScore);
+        } else {
+            Tour_Score tourScore = scoreEntity.get(0);
+            tourScore.setScore(score);
+            tourScoreDao.save(tourScore);
+        }
+        List<Tour_Score> scoreList = tourScoreDao.findAllByTourId(tourId);
+        Double average = scoreList.stream().mapToDouble(Tour_Score::getScore).average().orElse(0.0);
+
+
+        Tour tour  = tourDao.findByIdAndState(tourId, ValidState.VALID.ordinal());
+        tour.setScore(average);
+        tourDao.saveAndFlush(tour);
+        return Result.success().message("打分成功！");
+    }
+
+    @Override
+    public Result addComment(Long tourId, Long userId, String comment) {
+        List<Tour_Comment> commentEntity = tourCommentDao.findAllByTourIdAndUserId(tourId, userId);
+        if (commentEntity.isEmpty()) {
+            Tour_Comment tourScore = new Tour_Comment();
+            tourScore.setComment(comment);
+            tourScore.setTourId(tourId);
+            tourScore.setUserId(userId);
+            tourCommentDao.saveAndFlush(tourScore);
+        } else {
+            Tour_Comment tourComment = commentEntity.get(0);
+            tourComment.setComment(comment);
+            tourCommentDao.saveAndFlush(tourComment);
+        }
+        return Result.success().message("评论成功！");
+    }
+
+    @Override
+    public Result getTourComment(Long tourId) {
+        List<Tour_Comment> tourCommentList = tourCommentDao.findAllByTourId(tourId);
+        List<TourCommentVO> result = new ArrayList<>();
+
+        for (Tour_Comment comment : tourCommentList) {
+            TourCommentVO vo = new TourCommentVO();
+            vo.setComment(comment.getComment());
+            vo.setTourId(comment.getTourId());
+            vo.setUserId(comment.getUserId());
+
+            User user = userDao.findUserById(comment.getUserId());
+            vo.setUserAvatar(user.getAvatar());
+            vo.setUserName(user.getNickname());
+            result.add(vo);
+        }
+        return Result.success().withData(result);
     }
 
     private int checkTourStage(Long startTime, Long endTime) {

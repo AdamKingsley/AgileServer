@@ -44,8 +44,8 @@ public class TourController {
         return tourService.exitTour(form);
     }
 
-    @GetMapping("/detail")
-    public Result getTourDetail(@RequestParam("tourId") Long tourId, @RequestParam("userId") Long userId) {
+    @GetMapping("/detail/{tourId}/{userId}")
+    public Result getTourDetail(@PathVariable("tourId") Long tourId, @PathVariable("userId") Long userId) {
         return tourService.getTourDetail(tourId, userId);
     }
 
@@ -54,8 +54,28 @@ public class TourController {
         return tourService.getTourList(tourListForm);
     }
 
-    @GetMapping("/my")
-    public Result getMyTourList(@RequestParam("userId") Long userId) {
+    @GetMapping("/my/{userId}")
+    public Result getMyTourList(@PathVariable("userId") Long userId) {
         return tourService.getMyTourList(userId);
+    }
+
+    @GetMapping("/all/{cityId}/{userId}")
+    public Result findToursByCityId(@PathVariable("cityId") String cityId, @PathVariable("userId") Long userId) {
+        return tourService.findToursByCityId(cityId, userId);
+    }
+
+    @PostMapping("/add/score/{tourId}")
+    public Result addScore(@PathVariable("tourId") Long tourId, @RequestParam("userId") Long userId, @RequestParam("score") double score) {
+        return tourService.addScore(tourId, userId, score);
+    }
+
+    @PostMapping("/add/comment/{tourId}")
+    public Result addComment(@PathVariable("tourId") Long tourId, @RequestParam("userId") Long userId, @RequestParam("comment") String comment) {
+        return tourService.addComment(tourId, userId, comment);
+    }
+
+    @GetMapping("/comment/list/{tourId}")
+    public Result getTourComment(@PathVariable("tourId") Long tourId) {
+        return tourService.getTourComment(tourId);
     }
 }

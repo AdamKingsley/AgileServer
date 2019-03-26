@@ -13,6 +13,9 @@ public interface TourRepository extends JpaRepository<Tour,Long> {
 
     List<Tour> findByState(Integer state);
 
-    @Query(value = "select * from #{#entityName} as t where t.clubId in ?1 and t.state=?2",nativeQuery = true)
+    @Query(value = "select * from t_tour  where f_club_id in ?1 and f_state=?2",nativeQuery = true)
     List<Tour> findAllByClubIdExistsAndState(List<Long> clubIds, Integer state);
+
+    @Query(value = "select * from t_tour as t where f_club_id in ?1 and f_state=?2",nativeQuery = true)
+    List<Tour> findAllBySightIdExistsAndState(List<Long> sightIds, Integer state);
 }

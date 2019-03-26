@@ -50,4 +50,7 @@ public class Tour extends BaseEntity {
     @Column(name = "f_state")
     private Integer state = ValidState.VALID.ordinal();
 
+    @Column(name = "score")
+    private Double score;
+
 }
