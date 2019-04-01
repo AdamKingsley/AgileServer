@@ -22,5 +22,5 @@ public interface ClubService {
 
     Result getMyClubList(Long userId);
 
-//    Result
+    Result saveInvitationToNotification(Long userId,Long senderId,Long clubId);
 }

@@ -58,10 +58,14 @@ public class ClubServiceTest {
         clubService.getClubList(clubListForm);
     }
 
-
     @Test
     public void getMyClubListTest() {
         clubService.getMyClubList(28L);
+    }
+
+    @Test
+    public void saveInvitationToNotificationTest(){
+        clubService.saveInvitationToNotification(26L,97L,98L);
     }
 
 }

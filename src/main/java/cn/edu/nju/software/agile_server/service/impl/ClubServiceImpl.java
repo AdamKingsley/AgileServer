@@ -4,12 +4,10 @@ import cn.edu.nju.software.agile_server.common.ResponseCode;
 import cn.edu.nju.software.agile_server.common.Result;
 import cn.edu.nju.software.agile_server.constant.ValidState;
 import cn.edu.nju.software.agile_server.dao.ClubRepository;
+import cn.edu.nju.software.agile_server.dao.NotificationRepository;
 import cn.edu.nju.software.agile_server.dao.UserClubRepository;
 import cn.edu.nju.software.agile_server.dao.UserRepository;
-import cn.edu.nju.software.agile_server.entity.Club;
-import cn.edu.nju.software.agile_server.entity.User;
-import cn.edu.nju.software.agile_server.entity.User_Club;
-import cn.edu.nju.software.agile_server.entity.User_Tour;
+import cn.edu.nju.software.agile_server.entity.*;
 import cn.edu.nju.software.agile_server.form.ClubCreateForm;
 import cn.edu.nju.software.agile_server.form.ClubListForm;
 import cn.edu.nju.software.agile_server.form.JoinClubForm;
@@ -21,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +36,8 @@ public class ClubServiceImpl implements ClubService {
     private UserClubRepository userClubDao;
     @Resource
     private UserRepository userDao;
+    @Resource
+    private NotificationRepository notificationDao;
 
 //    public static void main(String[] args){
 //        ClubCreateForm form = new ClubCreateForm();
@@ -243,7 +244,21 @@ public class ClubServiceImpl implements ClubService {
         return Result.success().code(200).withData(result);
     }
 
-
+    @Override
+    public Result saveInvitationToNotification(Long userId,Long senderId,Long clubId){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String time = df.format(new Date());
+        String type = "club";
+        Notification notification = new Notification();
+        notification.setClub_id(clubId);
+        notification.setSender_id(senderId);
+        notification.setState(0);
+        notification.setTime(time);
+        notification.setType(type);
+        notification.setUse_id(userId);
+        notificationDao.save(notification);
+        return Result.success().code(200).message("邀请发送成功！");
+    }
 
     private List<Club> sortByCreateTime(List<Club> totalClub) {
         for(int i=0;i<totalClub.size()-1;i++){

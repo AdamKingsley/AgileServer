@@ -15,6 +15,7 @@ public class Notification implements Persistable<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    //"club","tour"
     @Column(name = "f_type")
     private String type;
 
