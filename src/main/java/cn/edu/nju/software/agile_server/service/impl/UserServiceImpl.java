@@ -43,6 +43,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result getUser(Long userid){
         User user = userDao.findUserById(userid);
+        if(user == null){
+            System.out.println("用户id错误！");
+            return Result.error().message("用户id错误！");
+        }
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user,userVO);
         return Result.success().withData(userVO).message("获取用户信息成功!");

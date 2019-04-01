@@ -21,4 +21,6 @@ public interface ClubService {
     Result getClubList(ClubListForm form);
 
     Result getMyClubList(Long userId);
+
+//    Result
 }

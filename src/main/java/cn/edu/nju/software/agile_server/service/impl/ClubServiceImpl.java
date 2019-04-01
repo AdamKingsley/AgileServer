@@ -21,9 +21,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +37,16 @@ public class ClubServiceImpl implements ClubService {
     private UserClubRepository userClubDao;
     @Resource
     private UserRepository userDao;
+
+//    public static void main(String[] args){
+//        ClubCreateForm form = new ClubCreateForm();
+//        form.setName("name");
+//        form.setPics("pic");
+//        form.setDescription("des");
+//        form.setTop_limit(100);
+//        ClubServiceImpl clubService = new ClubServiceImpl();
+//        clubService.createClub(form);
+//    }
 
     @Override
     public Result createClub(ClubCreateForm form) {
@@ -235,6 +242,8 @@ public class ClubServiceImpl implements ClubService {
         }
         return Result.success().code(200).withData(result);
     }
+
+
 
     private List<Club> sortByCreateTime(List<Club> totalClub) {
         for(int i=0;i<totalClub.size()-1;i++){
