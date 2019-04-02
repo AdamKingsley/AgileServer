@@ -59,9 +59,13 @@ public class ClubController {
     }
 
     @PostMapping("/invite")
-    //把Param都改成body（因为前端data是一个参数）
     public Result saveInvitationToNotification(@RequestBody ClubInviteForm clubInviteForm){
         return clubService.saveInvitationToNotification(clubInviteForm);
+    }
+
+    @GetMapping("/check/{invitedId}/{clubId}")
+    public Result checkIsIn(@PathVariable Long invitedId,@PathVariable Long clubId){
+        return clubService.checkIsIn(invitedId,clubId);
     }
 }
 

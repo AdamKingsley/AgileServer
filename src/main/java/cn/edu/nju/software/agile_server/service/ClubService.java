@@ -24,4 +24,6 @@ public interface ClubService {
     Result getMyClubList(Long userId);
 
     Result saveInvitationToNotification(ClubInviteForm clubInviteForm);
+
+    Result checkIsIn(Long invitedId,Long clubId);
 }

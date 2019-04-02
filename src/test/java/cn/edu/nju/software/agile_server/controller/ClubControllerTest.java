@@ -133,4 +133,14 @@ public class ClubControllerTest {
         String contentbody = result.getResponse().getContentAsString();
         System.out.println(contentbody);
     }
+
+    @Test
+    public void isInTest() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/club/check/26/1").accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print()).andReturn();
+        String contentbody = result.getResponse().getContentAsString();
+        System.out.println(contentbody);
+    }
 }

@@ -261,6 +261,17 @@ public class ClubServiceImpl implements ClubService {
         return Result.success().code(200).message("邀请发送成功！");
     }
 
+    @Override
+    public Result checkIsIn(Long invitedId,Long clubId){
+        List<User_Club> list = userClubDao.findAllByClubIdAndUserIdAndState(invitedId,clubId,true);
+        if(list.size()!=0) {
+            return Result.error().message("该用户已经加入社团！");
+        }else{
+            return Result.success().code(200).message("该用户未加入该社团！");
+        }
+    }
+
+
     private List<Club> sortByCreateTime(List<Club> totalClub) {
         for(int i=0;i<totalClub.size()-1;i++){
             for(int j=i+1;j<totalClub.size();j++){
