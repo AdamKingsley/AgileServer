@@ -1,6 +1,7 @@
 package cn.edu.nju.software.agile_server.service;
 
 import cn.edu.nju.software.agile_server.form.ClubCreateForm;
+import cn.edu.nju.software.agile_server.form.ClubInviteForm;
 import cn.edu.nju.software.agile_server.form.ClubListForm;
 import cn.edu.nju.software.agile_server.form.JoinClubForm;
 import org.junit.Test;
@@ -65,7 +66,8 @@ public class ClubServiceTest {
 
     @Test
     public void saveInvitationToNotificationTest(){
-        clubService.saveInvitationToNotification(26L,97L,98L);
+        ClubInviteForm clubInviteForm = Mockito.mock(ClubInviteForm.class);
+        clubService.saveInvitationToNotification(clubInviteForm);
     }
 
 }
