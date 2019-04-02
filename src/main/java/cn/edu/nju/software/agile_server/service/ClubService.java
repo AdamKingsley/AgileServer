@@ -2,6 +2,7 @@ package cn.edu.nju.software.agile_server.service;
 
 import cn.edu.nju.software.agile_server.common.Result;
 import cn.edu.nju.software.agile_server.form.ClubCreateForm;
+import cn.edu.nju.software.agile_server.form.ClubInviteForm;
 import cn.edu.nju.software.agile_server.form.ClubListForm;
 import cn.edu.nju.software.agile_server.form.JoinClubForm;
 
@@ -22,5 +23,5 @@ public interface ClubService {
 
     Result getMyClubList(Long userId);
 
-    Result saveInvitationToNotification(Long userId,Long senderId,Long clubId);
+    Result saveInvitationToNotification(ClubInviteForm clubInviteForm);
 }

@@ -20,7 +20,7 @@ public class Notification implements Persistable<Long> {
     private String type;
 
     @Column(name = "f_user_id")
-    private Long use_id;
+    private Long user_id;
 
     @Column(name = "f_time")
     private String time;

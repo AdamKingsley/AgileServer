@@ -9,6 +9,7 @@ import cn.edu.nju.software.agile_server.dao.UserClubRepository;
 import cn.edu.nju.software.agile_server.dao.UserRepository;
 import cn.edu.nju.software.agile_server.entity.*;
 import cn.edu.nju.software.agile_server.form.ClubCreateForm;
+import cn.edu.nju.software.agile_server.form.ClubInviteForm;
 import cn.edu.nju.software.agile_server.form.ClubListForm;
 import cn.edu.nju.software.agile_server.form.JoinClubForm;
 import cn.edu.nju.software.agile_server.service.ClubService;
@@ -245,17 +246,17 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public Result saveInvitationToNotification(Long invitedId,Long senderId,Long clubId){
+    public Result saveInvitationToNotification(ClubInviteForm clubInviteForm){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         String time = df.format(new Date());
         String type = "club";
         Notification notification = new Notification();
-        notification.setClub_id(clubId);
-        notification.setSender_id(senderId);
+        notification.setClub_id(clubInviteForm.getClubId());
+        notification.setSender_id(clubInviteForm.getSenderId());
         notification.setState(0);
         notification.setTime(time);
         notification.setType(type);
-        notification.setUse_id(invitedId);
+        notification.setUser_id(clubInviteForm.getInvitedId());
         notificationDao.save(notification);
         return Result.success().code(200).message("邀请发送成功！");
     }

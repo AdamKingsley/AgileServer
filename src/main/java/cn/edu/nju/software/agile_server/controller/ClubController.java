@@ -2,6 +2,7 @@ package cn.edu.nju.software.agile_server.controller;
 
 import cn.edu.nju.software.agile_server.common.Result;
 import cn.edu.nju.software.agile_server.form.ClubCreateForm;
+import cn.edu.nju.software.agile_server.form.ClubInviteForm;
 import cn.edu.nju.software.agile_server.form.ClubListForm;
 import cn.edu.nju.software.agile_server.form.JoinClubForm;
 import cn.edu.nju.software.agile_server.service.ClubService;
@@ -59,9 +60,8 @@ public class ClubController {
 
     @PostMapping("/invite")
     //把Param都改成body（因为前端data是一个参数）
-    public Result saveInvitationToNotification(@RequestParam("invitedId") Long invitedId, @RequestParam("senderId") Long senderId
-    ,@RequestParam("clubId") Long clubId){
-        return clubService.saveInvitationToNotification(invitedId,senderId,clubId);
+    public Result saveInvitationToNotification(@RequestBody ClubInviteForm clubInviteForm){
+        return clubService.saveInvitationToNotification(clubInviteForm);
     }
 }
 
