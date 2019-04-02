@@ -58,6 +58,7 @@ public class ClubController {
     }
 
     @PostMapping("/invite")
+    //把Param都改成body（因为前端data是一个参数）
     public Result saveInvitationToNotification(@RequestParam("invitedId") Long invitedId, @RequestParam("senderId") Long senderId
     ,@RequestParam("clubId") Long clubId){
         return clubService.saveInvitationToNotification(invitedId,senderId,clubId);
