@@ -245,7 +245,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public Result saveInvitationToNotification(Long userId,Long senderId,Long clubId){
+    public Result saveInvitationToNotification(Long invitedId,Long senderId,Long clubId){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         String time = df.format(new Date());
         String type = "club";
@@ -255,7 +255,7 @@ public class ClubServiceImpl implements ClubService {
         notification.setState(0);
         notification.setTime(time);
         notification.setType(type);
-        notification.setUse_id(userId);
+        notification.setUse_id(invitedId);
         notificationDao.save(notification);
         return Result.success().code(200).message("邀请发送成功！");
     }

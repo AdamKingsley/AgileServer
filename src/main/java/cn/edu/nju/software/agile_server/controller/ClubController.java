@@ -56,5 +56,11 @@ public class ClubController {
     public Result getMyClubList(@RequestParam("userId") Long userId) {
         return clubService.getMyClubList(userId);
     }
+
+    @PostMapping("/invite")
+    public Result saveInvitationToNotification(@RequestParam("invitedId") Long invitedId, @RequestParam("senderId") Long senderId
+    ,@RequestParam("clubId") Long clubId){
+        return clubService.saveInvitationToNotification(invitedId,senderId,clubId);
+    }
 }
 

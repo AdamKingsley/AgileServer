@@ -105,7 +105,7 @@ public class ClubControllerTest {
     public void listClubTest() throws Exception {
         ClubListForm clubListForm = Mockito.mock(ClubListForm.class);
         ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/club/join").content(mapper.writeValueAsString(clubListForm)).accept(MediaType.APPLICATION_JSON)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/club/list").content(mapper.writeValueAsString(clubListForm)).accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print()).andReturn();
@@ -117,6 +117,16 @@ public class ClubControllerTest {
     @Test
     public void myClubListTest() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/club/my").param("userId","29").accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print()).andReturn();
+        String contentbody = result.getResponse().getContentAsString();
+        System.out.println(contentbody);
+    }
+
+    @Test
+    public void invitationToNotificationTest() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/club/invite").param("invitedId","26").param("senderId","113").param("clubId","1").accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print()).andReturn();
