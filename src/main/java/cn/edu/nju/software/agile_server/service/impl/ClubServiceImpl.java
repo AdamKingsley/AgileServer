@@ -134,6 +134,8 @@ public class ClubServiceImpl implements ClubService {
             return Result.error().code(ResponseCode.ENOUGH_NUM_TOUR).message("当前社团已达到人数上限，无法加入！");
         }
 
+        //调用checkIsIn判断是否已在社团中
+
 
         User_Club userClub = new User_Club();
         userClub.setState(true);
