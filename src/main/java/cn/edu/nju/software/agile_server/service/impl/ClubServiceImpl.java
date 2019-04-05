@@ -185,7 +185,7 @@ public class ClubServiceImpl implements ClubService {
     public Result getClubDetail(Long clubId, Long userId) {
         Club club = clubDao.findByIdAndState(clubId, ValidState.VALID.ordinal());
         if (Objects.isNull(club)) {
-            return Result.error().code(ResponseCode.INVALID_TOUR).message("要查看的社团不存在!");
+            return Result.error().code(ResponseCode.INVALID_CLUB).message("要查看的社团不存在!");
         }
         ClubInfoVO result = new ClubInfoVO();
         BeanUtils.copyProperties(club, result);

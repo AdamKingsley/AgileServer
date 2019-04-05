@@ -13,4 +13,6 @@ public class ResponseCode {
     public static final int NOT_JOINED_TOUR = 1150;
 
     public static final int INVALID_USER =1200;
+
+    public static final int INVALID_CLUB = 1300;
 }
