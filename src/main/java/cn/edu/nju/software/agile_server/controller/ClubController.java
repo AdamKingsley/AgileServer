@@ -43,8 +43,8 @@ public class ClubController {
         return clubService.exitClub(form);
     }
 
-    @GetMapping("/detail")
-    public Result getClubDetail(@RequestParam("clubId") Long clubId, @RequestParam("userId") Long userId) {
+    @GetMapping("/detail/{clubId}/{userId}")
+    public Result getClubDetail(@PathVariable("clubId") Long clubId, @PathVariable("userId") Long userId) {
         return clubService.getClubDetail(clubId, userId);
     }
 

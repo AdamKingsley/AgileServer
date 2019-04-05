@@ -93,7 +93,7 @@ public class ClubControllerTest {
 
     @Test
     public void detailClubTest() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/club/detail").param("clubId","1").param("userId","113").accept(MediaType.APPLICATION_JSON)
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/club/detail/1/113").accept(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print()).andReturn();
