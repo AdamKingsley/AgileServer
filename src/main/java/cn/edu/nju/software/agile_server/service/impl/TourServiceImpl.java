@@ -324,6 +324,9 @@ public class TourServiceImpl implements TourService {
             } else {
                 vo.setJoinOrNot(false);
             }
+            if (t.getPics().equals("")) {
+                vo.setPics("../../images/sight_template.jpg");
+            }
             result.add(vo);
         }
 
