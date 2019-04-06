@@ -32,7 +32,11 @@ public class TourInfoVO {
 
     private Boolean joinOrNot;
 
-    private Integer stage;
+    private String stage;
 
-    private Double point;
+    private Double score;
+
+    private Boolean publicOrNot;
+
+    private Long id;
 }

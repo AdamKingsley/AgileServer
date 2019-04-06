@@ -77,7 +77,14 @@ public class TourServiceImpl implements TourService {
             TourInfoVO result = new TourInfoVO();
             BeanUtils.copyProperties(tourEntity, result);
             result.setJoinOrNot(true);
-            result.setStage(checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime()));
+            Integer stage = checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime());
+            if (stage == 0) {
+                result.setStage(TourStage.WAINTING.name());
+            } else if (stage == 1) {
+                result.setStage(TourStage.RUNNING.name());
+            } else {
+                result.setStage(TourStage.ENDED.name());
+            }
 
             return Result.success().message("创建出游成功！").withData(result);
         } catch (Exception e) {
@@ -132,7 +139,14 @@ public class TourServiceImpl implements TourService {
         TourInfoVO result = new TourInfoVO();
         BeanUtils.copyProperties(tourEntity, result);
         result.setJoinOrNot(true);
-        result.setStage(checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime()));
+        Integer stage = checkTourStage(form.getStartTime().getTime(), form.getEndTime().getTime());
+        if (stage == 0) {
+            result.setStage(TourStage.WAINTING.name());
+        } else if (stage == 1) {
+            result.setStage(TourStage.RUNNING.name());
+        } else {
+            result.setStage(TourStage.ENDED.name());
+        }
 
         return Result.success().message("更新出游成功！").withData(result);
     }
@@ -212,8 +226,15 @@ public class TourServiceImpl implements TourService {
         }
         TourInfoVO result = new TourInfoVO();
         BeanUtils.copyProperties(tour, result);
-        result.setStage(checkTourStage(tour.getStartTime().toEpochMilli(), tour.getEndTime().toEpochMilli()));
+        Integer stage = checkTourStage(tour.getStartTime().toEpochMilli(), tour.getEndTime().toEpochMilli());
 
+        if (stage == 0) {
+            result.setStage(TourStage.WAINTING.name());
+        } else if (stage == 1) {
+            result.setStage(TourStage.RUNNING.name());
+        } else {
+            result.setStage(TourStage.ENDED.name());
+        }
         List<User_Tour> userTour = userTourDao.findAllByTourIdAndUserIdAndState(tourId, userId, true);
 
         if (userTour.isEmpty()) {
@@ -273,7 +294,14 @@ public class TourServiceImpl implements TourService {
         for (Tour t : totalTour) {
             TourInfoVO vo = new TourInfoVO();
             BeanUtils.copyProperties(t, vo);
-            vo.setStage(checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()));
+            Integer stage = checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli());
+            if (stage == 0) {
+                vo.setStage(TourStage.WAINTING.name());
+            } else if (stage == 1) {
+                vo.setStage(TourStage.RUNNING.name());
+            } else {
+                vo.setStage(TourStage.ENDED.name());
+            }
             if (joinTourIds.contains(t.getId())) {
                 vo.setJoinOrNot(true);
             } else {
@@ -298,7 +326,14 @@ public class TourServiceImpl implements TourService {
         for (Tour t : sorted) {
             TourInfoVO vo = new TourInfoVO();
             BeanUtils.copyProperties(t, vo);
-            vo.setStage(checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()));
+            Integer stage = checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli());
+            if (stage == 0) {
+                vo.setStage(TourStage.WAINTING.name());
+            } else if (stage == 1) {
+                vo.setStage(TourStage.RUNNING.name());
+            } else {
+                vo.setStage(TourStage.ENDED.name());
+            }
             vo.setJoinOrNot(true);
             result.add(vo);
         }
@@ -318,16 +353,31 @@ public class TourServiceImpl implements TourService {
         for (Tour t : totalTour) {
             TourInfoVO vo = new TourInfoVO();
             BeanUtils.copyProperties(t, vo);
-            vo.setStage(checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli()));
+            vo.setScore(t.getScore());
+            Integer stage = checkTourStage(t.getStartTime().toEpochMilli(), t.getEndTime().toEpochMilli());
+            if (stage == 0) {
+                vo.setStage(TourStage.WAINTING.name());
+            } else if (stage == 1) {
+                vo.setStage(TourStage.RUNNING.name());
+            } else {
+                vo.setStage(TourStage.ENDED.name());
+            }
+            vo.setId(t.getId());
             if (joinTourIds.contains(t.getId())) {
                 vo.setJoinOrNot(true);
             } else {
                 vo.setJoinOrNot(false);
             }
             if (t.getPics().equals("")) {
-                vo.setPics("../../images/sight_template.jpg");
+                vo.setPics("pics/sight/sight_template.jpg");
+            }
+            if (t.getClubId() == null) {
+                vo.setPublicOrNot(true);
+            } else{
+                vo.setPublicOrNot(false);
             }
             result.add(vo);
+
         }
 
         return Result.success().code(200).withData(result);
@@ -426,7 +476,7 @@ public class TourServiceImpl implements TourService {
         return result;
     }
 
-    private int checkTourStage(Long startTime, Long endTime) {
+    private Integer checkTourStage(Long startTime, Long endTime) {
         Long now = System.currentTimeMillis();
         if (startTime > now) {
             return TourStage.WAINTING.ordinal();

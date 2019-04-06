@@ -1,13 +1,14 @@
 package cn.edu.nju.software.agile_server.constant;
 
 public enum TourStage {
-    WAINTING(0),
-    RUNNING(1),
-    ENDED(2);
+    WAINTING("未开始"),
+    RUNNING("进行中"),
+    ENDED("已结束");
 
-    private Integer code;
+    private String code;
 
-    TourStage(Integer code){
+    TourStage(String code){
         this.code = code;
     }
+
 }
