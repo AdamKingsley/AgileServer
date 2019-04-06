@@ -1,7 +1,10 @@
 package cn.edu.nju.software.agile_server.controller;
 
 import cn.edu.nju.software.agile_server.common.Result;
+import cn.edu.nju.software.agile_server.entity.Notification;
 import cn.edu.nju.software.agile_server.form.LoginForm;
+import cn.edu.nju.software.agile_server.form.NotificationForm;
+import cn.edu.nju.software.agile_server.form.UserCommentForm;
 import cn.edu.nju.software.agile_server.form.UserForm;
 import cn.edu.nju.software.agile_server.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +33,18 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public Result getUserById(@PathVariable Long userId){
+    public Result getUserById(@PathVariable ("userId")Long userId){
         return userService.getUser(userId);
     }
+
+    @PostMapping("/comment/update")
+    public Result updatecomment(@RequestBody UserCommentForm userCommentForm){return userService.updatecomment(userCommentForm);}
+
+    @GetMapping("/notice/{userId}")
+    public Result getnotice(@PathVariable ("userId")Long userId){
+        return userService.getnotice(userId);
+    }
+
+    @PutMapping("/notice/update")
+    public Result updatenotice(@RequestBody NotificationForm notificationForm){return userService.updatenotification(notificationForm);}
 }

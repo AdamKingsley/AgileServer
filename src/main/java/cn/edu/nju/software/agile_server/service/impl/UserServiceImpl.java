@@ -1,21 +1,29 @@
 package cn.edu.nju.software.agile_server.service.impl;
 
+import cn.edu.nju.software.agile_server.common.ResponseCode;
 import cn.edu.nju.software.agile_server.common.Result;
 import cn.edu.nju.software.agile_server.config.WechatConfig;
+import cn.edu.nju.software.agile_server.dao.NotificationRepository;
 import cn.edu.nju.software.agile_server.dao.UserRepository;
+import cn.edu.nju.software.agile_server.entity.Notification;
 import cn.edu.nju.software.agile_server.entity.User;
 import cn.edu.nju.software.agile_server.form.LoginForm;
+import cn.edu.nju.software.agile_server.form.NotificationForm;
+import cn.edu.nju.software.agile_server.form.UserCommentForm;
 import cn.edu.nju.software.agile_server.form.UserForm;
 import cn.edu.nju.software.agile_server.service.UserService;
 import cn.edu.nju.software.agile_server.service.feign.WechatFeign;
 import cn.edu.nju.software.agile_server.service.feign.feign_response.LoginFeignResponse;
+import cn.edu.nju.software.agile_server.vo.NotificationVO;
 import cn.edu.nju.software.agile_server.vo.UserVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,6 +33,8 @@ public class UserServiceImpl implements UserService {
     private WechatConfig wechatConfig;
     @Resource
     private UserRepository userDao;
+    @Resource
+    private NotificationRepository notificationDao;
 
     @Override
     public Result login(LoginForm loginForm) {
@@ -70,4 +80,39 @@ public class UserServiceImpl implements UserService {
         userDao.save(user);
         return Result.success().message("更新用户信息成功！");
     }
+
+    @Override
+    public Result getnotice(Long userid){
+        List<NotificationVO> result = new ArrayList<>();
+        List<Notification> notificationlist = notificationDao.findAllByUserId(userid);
+        for (Notification n:notificationlist) {
+            NotificationVO vo = new NotificationVO();
+            BeanUtils.copyProperties(n,vo);
+            result.add(vo);
+        }
+        return Result.success().code(200).withData(result);
+    }
+
+    @Override
+    public Result updatenotification(NotificationForm notificationForm) {
+        if (StringUtils.isEmpty(notificationForm.getId())) {
+            Result.error().message("更新的通知指定的对应id为空！");
+        }
+        Notification notification = new Notification();
+        BeanUtils.copyProperties(notificationForm, notification);
+        notificationDao.save(notification);
+        return Result.success().message("更新通知信息成功！");
+    }
+
+    @Override
+    public Result updatecomment(UserCommentForm form) {
+        User user = userDao.findUserById(form.getId());
+        if(Objects.isNull(user)){
+            return Result.error().code(ResponseCode.INVALID_USER).message("要修改的用户不存在！");
+        }
+        user.setComment(form.getComment());
+        userDao.save(user);
+        return Result.success().message("更新用户评论成功！");
+    }
+
 }

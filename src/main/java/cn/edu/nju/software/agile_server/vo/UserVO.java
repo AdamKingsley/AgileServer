@@ -19,5 +19,5 @@ public class UserVO {
     private String area;
     private String address;
     private String school;
-    //private String comment;
+    private String comment;
 }
