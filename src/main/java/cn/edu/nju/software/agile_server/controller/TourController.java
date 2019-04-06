@@ -1,9 +1,7 @@
 package cn.edu.nju.software.agile_server.controller;
 
 import cn.edu.nju.software.agile_server.common.Result;
-import cn.edu.nju.software.agile_server.form.JoinTourForm;
-import cn.edu.nju.software.agile_server.form.TourCreateForm;
-import cn.edu.nju.software.agile_server.form.TourListForm;
+import cn.edu.nju.software.agile_server.form.*;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.vo.TourInfoVO;
 import lombok.extern.slf4j.Slf4j;
@@ -77,5 +75,20 @@ public class TourController {
     @GetMapping("/comment/list/{tourId}")
     public Result getTourComment(@PathVariable("tourId") Long tourId) {
         return tourService.getTourComment(tourId);
+    }
+
+    @PostMapping("/invite")
+    public Result saveInvitationToNotification(@RequestBody TourInviteForm tourInviteForm){
+        return tourService.saveInvitationToNotification(tourInviteForm);
+    }
+
+    @PostMapping("/reject/{notificationId}")
+    public Result reject(@PathVariable("notificationId") Long notificationId) {
+        return tourService.reject(notificationId);
+    }
+
+    @PostMapping("/agree/{notificationId}")
+    public Result agree(@PathVariable("notificationId") Long notificationId) {
+        return tourService.agree(notificationId);
     }
 }

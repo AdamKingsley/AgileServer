@@ -8,6 +8,7 @@ import cn.edu.nju.software.agile_server.dao.*;
 import cn.edu.nju.software.agile_server.entity.*;
 import cn.edu.nju.software.agile_server.form.JoinTourForm;
 import cn.edu.nju.software.agile_server.form.TourCreateForm;
+import cn.edu.nju.software.agile_server.form.TourInviteForm;
 import cn.edu.nju.software.agile_server.form.TourListForm;
 import cn.edu.nju.software.agile_server.service.TourService;
 import cn.edu.nju.software.agile_server.validate.FormValidate;
@@ -18,8 +19,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -41,6 +44,8 @@ public class TourServiceImpl implements TourService {
     private TourScoreRepository tourScoreDao;
     @Resource
     private TourCommentRepository tourCommentDao;
+    @Resource
+    private NotificationRepository notificationDao;
 
     @Override
     public Result createTour(TourCreateForm form) {
@@ -383,6 +388,39 @@ public class TourServiceImpl implements TourService {
             result.add(vo);
         }
         return Result.success().withData(result);
+    }
+
+    @Override
+    public Result saveInvitationToNotification(TourInviteForm form) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String time = df.format(new Date());
+        String type = "tour";
+        Notification notification = new Notification();
+        notification.setTour_id(form.getTourId());
+        notification.setSender_id(form.getSenderId());
+        notification.setState(0);
+        notification.setTime(time);
+        notification.setType(type);
+        notification.setUser_id(form.getInvitedId());
+        notificationDao.save(notification);
+        return Result.success().code(200).message("邀请发送成功！");
+    }
+
+    @Override
+    public Result reject(Long notificationId) {
+        Notification notification = notificationDao.findById(notificationId).get();
+        notification.setState(2);
+        notificationDao.saveAndFlush(notification);
+        return Result.success().code(200).message("拒绝加入成功！");
+    }
+
+    @Override
+    public Result agree(Long notificationId) {
+        Notification notification = notificationDao.findById(notificationId).get();
+        notification.setState(1);
+        notificationDao.saveAndFlush(notification);
+        Result result = joinTour(new JoinTourForm(notification.getTour_id(), notification.getUser_id()));
+        return result;
     }
 
     private int checkTourStage(Long startTime, Long endTime) {
